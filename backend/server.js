@@ -4,6 +4,7 @@ const dotenv = require("dotenv");
 const bodyParser = require("body-parser");
 const dbConnection = require("./config/dbConfig");
 const userRoutes = require("./routes/userRoute");
+const labelRoutes = require("./routes/labelRoute");
 dotenv.config();
 
 const app = express();
@@ -16,6 +17,8 @@ dbConnection();
 
 // // Routes
 app.use("/api/users", userRoutes);
+app.use("/api/labels", labelRoutes);
+
 // app.use("/api/labels", labelRoutes);
 
 const PORT = process.env.PORT || 5000;

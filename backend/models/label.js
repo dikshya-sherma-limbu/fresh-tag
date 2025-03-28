@@ -10,28 +10,42 @@ const labelSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  storageMethod: {
+  bestBefore: {
     type: String,
-    enum: ["fridge", "freezer", "pantry"],
     required: true,
   },
-  preparationDate: {
-    type: Date,
-    required: true,
-  },
-  preservative: {
-    type: Boolean,
-    required: true,
-  },
-  packageType: {
+  additionalInfo: {
     type: String,
-    enum: ["airtight container", "plastic wrap", "ziploc", "open plate"],
     required: true,
   },
-  labelGenerated: {
-    type: String, // You can store the label as an image URL or some other format
-    required: true,
-  },
+  // storageMethod: {
+  //   type: String,
+  //   enum: ["fridge", "freezer", "pantry"],
+  //   required: true,
+  // },
+  // preparationDate: {
+  //   type: Date,
+  //   required: true,
+  // },
+  // preservative: {
+  //   type: Boolean,
+  //   required: true,
+  // },
+  // packageType: {
+  //   type: String,
+  //   enum: [
+  //     "airtight container",
+  //     "plastic wrap",
+  //     "ziploc",
+  //     "open plate",
+  //     "glass jar",
+  //   ],
+  //   required: true,
+  // },
+  // labelGenerated: {
+  //   type: String, // You can store the label as an image URL or some other format
+  //   required: true,
+  // },
 });
 
 const Label = mongoose.model("GeneratedLabel", labelSchema);

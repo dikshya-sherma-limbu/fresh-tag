@@ -10,6 +10,11 @@ class UserRepository {
   async saveUser(user) {
     return await user.save();
   }
+
+  // Find a user by ID
+  async findById(id) {
+    return await User.findById(id);
+  }
 }
 
 module.exports = new UserRepository();
