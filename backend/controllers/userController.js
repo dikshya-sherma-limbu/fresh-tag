@@ -1,5 +1,4 @@
 // controllers/userController.js
-const { generateToken } = require("../utils/jwtUtils"); // Import the JWT utility
 const userService = require("../services/userService");
 const { validationResult } = require("express-validator");
 
@@ -10,16 +9,17 @@ const registerUser = async (req, res) => {
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
-
   const { username, email, password } = req.body;
 
   try {
     // Call the service layer to register the user
-    const user = await userService.registerUser({ username, email, password });
+    const { user, token } = await userService.registerUser({
+      username,
+      email,
+      password,
+    });
 
-    const token = generateToken(user._id); // Generate a token
-
-    // Send the response
+    // Send the response with the generated token and user info
     res.status(201).json({
       message: "User registered successfully",
       token,
@@ -29,31 +29,28 @@ const registerUser = async (req, res) => {
     res.status(400).json({ message: err.message });
   }
 };
+
+const loginUser = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const { token, user } = await userService.loginUser({ email, password });
+
+    console.log("login success", user);
+    res.json({ token, userId: user._id });
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+};
+// const logoutUser = async (req, res) => {
+//   try {
+//     await userService.logoutUser();
+//     res.json({ message: "Logged out successfully" });
+//   } catch (err) {
+//     res.status(400).json({ message: err.message });
+//   }
+// };
 module.exports = {
   registerUser,
+  loginUser,
 };
-// // Login User
-// router.post("/login", async (req, res) => {
-//   const { email, password } = req.body;
-
-//   try {
-//     const user = await User.findOne({ email });
-//     if (!user) return res.status(400).json({ message: "Invalid credentials" });
-
-//     const isMatch = await user.matchPassword(password);
-//     if (!isMatch)
-//       return res.status(400).json({ message: "Invalid credentials" });
-
-//     // Use the generateToken function to create the token
-//     const token = generateToken(user._id);
-
-//     res.json({ token, userId: user._id });
-//   } catch (err) {
-//     res.status(500).json({ message: "Server error" });
-//   }
-// });
-
-// // Logout User
-// router.post("/logout", (req, res) => {
-//   res.json({ message: "Logged out successfully" });
-// });
