@@ -36,14 +36,16 @@ const UserService = {
       throw new Error("Invalid credentials");
     }
 
+    console.log("id sent to generate token", user._id);
     const token = generateToken(user._id); // Token generated here
 
     return { token, user };
   },
 
-  // // Logout a user
-  // logoutUser: async () => {
+  // // // Logout a user
+  // logoutUser: async ({user}) => {
   //   // Logout logic
+  //   // This can vary depending on how you manage sessions or tokens
 
   // },
 };

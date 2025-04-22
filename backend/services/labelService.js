@@ -12,6 +12,7 @@ const modelId = process.env.GEMINI_MODEL_ID;
 const apiUrl = `https://generativelanguage.googleapis.com/v1beta/${modelId}:generateContent?key=${apiKey}`;
 
 const LabelService = {
+  // Create a new label
   createLabel: async ({
     userId,
     foodName,
@@ -101,6 +102,30 @@ const LabelService = {
       console.error("Error generating label:", err);
       throw new Error("Failed to generate food expiry label: " + err.message);
     }
+  },
+
+  // Get all labels for a user
+  getAllLabels: async (userId) => {
+    // Check if user exists
+    const user = await UserRepository.findById(userId);
+    if (!user) {
+      throw new Error("User does not exist");
+    }
+
+    // Get all labels for the user
+    const labels = await LabelRepository.getAllLabels(userId);
+    return labels;
+  },
+
+  // Get a label by foodName
+  getLabelByFoodName: async (foodName) => {
+    const label = await LabelRepository.getLabelByFoodName(foodName);
+    return label;
+  },
+  // Delete a label by foodName
+  deleteLabelByFoodName: async (foodName) => {
+    const label = await LabelRepository.deleteLabelByFoodName(foodName);
+    return label;
   },
 };
 
