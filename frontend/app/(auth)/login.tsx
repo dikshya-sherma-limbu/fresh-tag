@@ -15,7 +15,7 @@ const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [localLoading, setLocalLoading] = useState(false);
-  const { login, isLoading: authLoading, isAuthenticated } = useAuth();
+  const { login, isUserValidated } = useAuth();
 
   // Combined loading state (either local or from auth context)
   const isSubmitting = localLoading;
@@ -31,11 +31,9 @@ const LoginScreen = () => {
     try {
       console.log("Login attempt starting for:", email);
       setLocalLoading(true);
-      authLoading &&
-        console.log("Auth context is loading, waiting..." + authLoading);
       await login({ email, password });
 
-      console.log("isAuthenticated after login:", isAuthenticated);
+      console.log("isAuthenticated after login:", isUserValidated);
       // No need to navigate - the root layout will handle this based on isAuthenticated
     } catch (error: any) {
       console.error("Login error in component:", error);

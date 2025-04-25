@@ -8,29 +8,39 @@ import {
   Alert,
   ActivityIndicator,
 } from "react-native";
+import Navbar from "@/components/Navbar";
+import LabelForm from "@/components/LabelForm";
+import RecentLabel from "@/components/RecentLabel";
+
 const DashboardIndex = () => {
   return (
-    <View>
-      <Text style={styles.title}>Welcome To Fresh Tag</Text>
-      <Text style={styles.subtitle}>Dashboard</Text>
+    <View style={styles.indexContainer}>
+      <Navbar />
+      <LabelForm />
+      <RecentLabel
+        Labels={[
+          {
+            id: 1,
+            foodName: "Apple",
+            bestBefore: "2023-10-01",
+            additionalInfo: "Keep in a cool place",
+          },
+          {
+            id: 2,
+            foodName: "Banana",
+            bestBefore: "2023-10-05",
+            additionalInfo: "Store at room temperature",
+          },
+        ]}
+      />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 10,
-  },
-  subtitle: {
-    fontSize: 20,
-    fontWeight: "600",
-    marginBottom: 5,
-  },
-  description: {
-    fontSize: 16,
-    color: "#555",
+  indexContainer: {
+    alignItems: "center",
+    flex: 1,
   },
 });
 

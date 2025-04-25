@@ -1,7 +1,6 @@
 // controllers/userController.js
 const userService = require("../services/userService");
 const { validationResult } = require("express-validator");
-
 // Register User
 const registerUser = async (req, res) => {
   // Handle validation errors
@@ -42,6 +41,9 @@ const loginUser = async (req, res) => {
     res.status(400).json({ message: err.message });
   }
 };
+const validateUserToken = async (req, res) => {
+  return res.status(200).json({ message: "Token is valid", user: req.user }); // Send the user details if token is valid
+};
 // const logoutUser = async (req, res) => {
 //   try {
 //     await userService.logoutUser();
@@ -53,4 +55,5 @@ const loginUser = async (req, res) => {
 module.exports = {
   registerUser,
   loginUser,
+  validateUserToken,
 };

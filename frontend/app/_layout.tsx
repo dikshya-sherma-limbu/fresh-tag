@@ -9,7 +9,7 @@ import { useAuth } from "../context/auth-context/authContext";
 SplashScreen.preventAutoHideAsync();
 
 function RootLayoutContent() {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isUserValidated, isLoading } = useAuth();
   const [fontsLoaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
@@ -23,16 +23,16 @@ function RootLayoutContent() {
     }
   }, [fontsLoaded, isLoading]);
   console.log("Rendering test component");
-  console.log("isAuthenticated:", isAuthenticated);
+  console.log("isAuthenticated:", isUserValidated);
   useEffect(() => {
     if (appIsReady) {
-      if (isAuthenticated) {
+      if (isUserValidated) {
         router.replace("/(dashboard)");
       } else {
         router.replace("/(auth)/login");
       }
     }
-  }, [appIsReady, isAuthenticated]);
+  }, [appIsReady, isUserValidated]);
 
   if (!appIsReady) return null;
 

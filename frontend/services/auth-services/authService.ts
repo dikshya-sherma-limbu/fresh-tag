@@ -58,30 +58,23 @@ export const removeAuthData = async (): Promise<void> => {
 
 export const login = async (credentials: LoginCredentials) => {
   try {
-    console.log("Login attempt with credentials:", credentials);
-    const response = await axios.post(
-      "http://192.168.2.180:2025/api/users/login",
-      credentials,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const response = await axios.post(API_ENDPOINTS.USERS.LOGIN, credentials, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
     if (response.status !== 200) {
-      console.error("Response:", response);
+      console.error("Response error:", response);
     }
-
     const data = response.data;
-    console.log("Login response data:", data);
 
     if (data.token) {
       await storeToken(data.token); // Store the token securely
     } else {
       console.error("No token received in response:", data);
     }
-
+    console.log("resonse:", response.data);
     return data;
   } catch (error) {
     console.error("Login error:", error);
@@ -96,7 +89,26 @@ export const login = async (credentials: LoginCredentials) => {
 // Check if user is authenticated
 export const isAuthenticated = async (): Promise<boolean> => {
   const token = await getToken();
-  return !!token;
+  if (!token) {
+    console.log("No token found, user is not authenticated.");
+    return false;
+  }
+  console.log("Checking authentication, token:", token);
+  try {
+    const response = await axios.get(API_ENDPOINTS.USERS.AUTH_TOKEN, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (response.status !== 200) {
+      console.error("Response error:", response);
+      return false; // User is not authenticated
+    } else {
+      return true; // User is authenticated
+    }
+  } catch (error) {
+    return false;
+  }
 };
 
 // // Create axios instance with auth header

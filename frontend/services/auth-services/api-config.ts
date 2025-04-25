@@ -1,7 +1,7 @@
 // Base configuration for API services
 
 // Base URL for your API (customize this for your environment)
-const BASE_URL = "https:// 192.168.2.180/2025";
+const BASE_URL = "http://192.168.2.180:2025";
 
 // API endpoints
 export const API_ENDPOINTS = {
@@ -11,6 +11,7 @@ export const API_ENDPOINTS = {
     LOGIN: `${BASE_URL}/api/users/login`,
     REGISTER: `${BASE_URL}/api/users/register`,
     PROFILE: `${BASE_URL}/api/users/profile`,
+    AUTH_TOKEN: `${BASE_URL}/api/users/authenticate-user`,
   },
 
   // Label related endpoints

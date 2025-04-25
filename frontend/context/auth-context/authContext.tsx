@@ -4,12 +4,12 @@ import {
   getToken,
   User,
   LoginCredentials,
+  isAuthenticated,
 } from "../../services/auth-services/authService";
-
 interface AuthContextType {
   isLoading: boolean;
   user: User | null;
-  isAuthenticated: boolean;
+  isUserValidated: boolean;
   login: (credentials: LoginCredentials) => Promise<any>;
 }
 
@@ -17,7 +17,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType>({
   isLoading: true,
   user: null,
-  isAuthenticated: false,
+  isUserValidated: false,
   login: async () => {},
 });
 
@@ -29,14 +29,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   // State variables to manage authentication status, loading state, and user data
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState<User | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isUserValidated, setIsUserValidated] = useState(false);
 
   useEffect(() => {
     const checkToken = async () => {
       const token = await getToken();
       if (token) {
-        setIsAuthenticated(true);
-        // Optionally fetch user data here
+        const isValideToken = await isAuthenticated();
+        if (isValideToken) {
+          setIsUserValidated(true);
+        } else {
+          setIsUserValidated(false);
+          setUser(null); // Clear user data if token is invalid
+        }
       }
       setIsLoading(false);
     };
@@ -47,17 +52,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const login = async (credentials: LoginCredentials): Promise<any> => {
     setIsLoading(true);
     try {
-      console.log("Attempting login with:", credentials.email);
       const response = await loginApi(credentials);
-      console.log(
-        "Login API response received:",
-        response ? "Success" : "Failed"
-      );
 
       if (response && response.token) {
-        console.log("Setting authenticated state to true");
-        setUser(response.user || null);
-        setIsAuthenticated(true);
+        const isValideToken = await isAuthenticated();
+        if (!isValideToken) {
+          setIsUserValidated(false);
+          setUser(null);
+          console.error("Invalid token received:", response.token);
+          return response; // Token is invalid, return early
+        }
+
+        setIsUserValidated(true);
+        setUser(response.user); // Assuming the response contains user data
+
         return response;
       } else {
         throw new Error("Invalid response from login API");
@@ -72,7 +80,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   return (
-    <AuthContext.Provider value={{ isLoading, user, isAuthenticated, login }}>
+    <AuthContext.Provider value={{ isLoading, user, isUserValidated, login }}>
       {children}
     </AuthContext.Provider>
   );
