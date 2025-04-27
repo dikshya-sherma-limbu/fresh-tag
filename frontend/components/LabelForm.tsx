@@ -5,18 +5,20 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import React, { useState } from "react";
 import DropDownPicker from "react-native-dropdown-picker";
 import CustomButton from "./Button";
-import { Ionicons } from "@expo/vector-icons"; // Make sure to install this package
+import { Ionicons } from "@expo/vector-icons";
+import { createLabel } from "@/services/label-services/labelService";
 
 export default function LabelForm() {
   const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState<"date" | "time">("date");
   const [show, setShow] = useState(false);
-
+  const [foodName, setFoodName] = useState<string>("");
   // For the DateTimePicker
   interface DateChangeEvent {
     type: string;
@@ -65,13 +67,16 @@ export default function LabelForm() {
   ]);
 
   const storageDropdown = userDropDown([
-    { label: "Cool", value: "cool" },
-    { label: "Dry", value: "dry" },
+    { label: "Fridge", value: "Fridge" },
+    { label: "Pantry", value: "Pantry" },
+    { label: "Freezer", value: "Freezer" },
   ]);
 
   const packageTypeDropdown = userDropDown([
-    { label: "Box", value: "box" },
-    { label: "Bottle", value: "bottle" },
+    { label: "Plastic Wrap", value: "Plastic Wrap" },
+    { label: "Ziploc", value: "Ziploc" },
+    { label: "Open Plate", value: "Open Plate" },
+    { label: "Glass Jar", value: "Glass Jar" },
   ]);
 
   const formatDate = (date: Date) => {
@@ -82,10 +87,64 @@ export default function LabelForm() {
     });
   };
 
+  // Function to handle the creation of the label
+  const handleCreateLabel = async () => {
+    try {
+      if (
+        !foodName ||
+        preservativesDropdown.value === null ||
+        storageDropdown.value === null ||
+        packageTypeDropdown.value === null ||
+        !date
+      ) {
+        // Check if all fields are filled
+        Alert.alert("Error", "Please fill  all fields");
+        return;
+      }
+      const labelData = {
+        foodName,
+        preparationDate: date,
+        preservative: preservativesDropdown.value,
+        storageMethod: storageDropdown.value,
+        packageType: packageTypeDropdown.value,
+      };
+      console.log("Label data:", labelData);
+      // Call the createLabel function from the labelService
+      const response = await createLabel(labelData);
+      if (response.status !== 200) {
+        console.error("Response error:", response);
+        Alert.alert("Error", "Failed to create label");
+        return;
+      }
+      // then handle the response as needed
+
+      console.log("Label created successfully:", response);
+    } catch (error) {
+      console.error("Error creating label:", error);
+    } finally {
+      // finally clear the form
+      onClear();
+      Alert.alert("Success", "Label created successfully!");
+    }
+  };
+
+  // clear the form
+  const onClear = () => {
+    setDate(new Date()); // Reset date to current date
+    setFoodName(""); // Reset food name to empty string
+    preservativesDropdown.setValue(null);
+    storageDropdown.setValue(null);
+    packageTypeDropdown.setValue(null);
+  };
   return (
     <View style={styles.formContainer}>
       <Text style={styles.text}>Create Label</Text>
-      <TextInput placeholder="Label Name" style={styles.inputText} />
+      <TextInput
+        placeholder="Label Name"
+        style={styles.inputText}
+        value={foodName} // Bind the input value to the state
+        onChangeText={(text) => setFoodName(text)} // Update the state with the input value
+      />
       <View style={styles.innerContainer}>
         <View style={{ flex: 1 }}>
           <TouchableOpacity
@@ -140,8 +199,13 @@ export default function LabelForm() {
         </View>
       </View>
       <View style={styles.buttonContainer}>
-        <CustomButton title="Create" onPress={() => {}} />
-        <CustomButton title="Clear" onPress={() => {}} />
+        <CustomButton
+          title="Create"
+          onPress={() => {
+            handleCreateLabel();
+          }}
+        />
+        <CustomButton title="Clear" onPress={() => onClear()} />
       </View>
       {show && (
         <DateTimePicker

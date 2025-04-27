@@ -47,7 +47,7 @@ const LabelService = {
                   Return the response in the following strict JSON format:
                   {
                     "foodName": "string",
-                    "bestBefore": "string",
+                    "bestBefore": "Date", // MM-DD-YYYY date format
                     "additionalInfo": "string"
                   }`,
                 },
@@ -82,20 +82,24 @@ const LabelService = {
 
       const modelResponse = JSON.parse(modelResponseText);
 
+      // Create the label with Date object in database
       const label = new Label({
         user: userId,
         foodName: modelResponse.foodName,
-        bestBefore: modelResponse.bestBefore,
+        bestBefore: new Date(modelResponse.bestBefore),
         additionalInfo: modelResponse.additionalInfo,
       });
 
       // Save the label to the database
       await LabelRepository.saveLabel(label);
 
+      // Format date to YYYY-MM-DD for the response
+      const formattedDate = label.bestBefore.toISOString().split("T")[0];
+
       return {
         id: label._id,
         foodName: label.foodName,
-        bestBefore: label.bestBefore,
+        bestBefore: formattedDate, // Return formatted date string
         additionalInfo: label.additionalInfo,
       };
     } catch (err) {
@@ -114,18 +118,69 @@ const LabelService = {
 
     // Get all labels for the user
     const labels = await LabelRepository.getAllLabels(userId);
-    return labels;
+
+    // Format the dates to YYYY-MM-DD in the response
+    return labels.map((label) => {
+      return {
+        _id: label._id,
+        user: label.user,
+        foodName: label.foodName,
+        bestBefore: new Date(label.bestBefore).toISOString().split("T")[0],
+        additionalInfo: label.additionalInfo,
+        __v: label.__v,
+      };
+    });
   },
 
   // Get a label by foodName
   getLabelByFoodName: async (foodName) => {
     const label = await LabelRepository.getLabelByFoodName(foodName);
+    if (label) {
+      return {
+        _id: label._id,
+        user: label.user,
+        foodName: label.foodName,
+        bestBefore: new Date(label.bestBefore).toISOString().split("T")[0],
+        additionalInfo: label.additionalInfo,
+        __v: label.__v,
+      };
+    }
     return label;
   },
+
   // Delete a label by foodName
   deleteLabelByFoodName: async (foodName) => {
     const label = await LabelRepository.deleteLabelByFoodName(foodName);
     return label;
+  },
+
+  // Get active (non-expired) labels for a user
+  getActiveLabels: async (userId) => {
+    // Check if user exists
+    const user = await UserRepository.findById(userId);
+    if (!user) {
+      throw new Error("User does not exist");
+    }
+
+    const currentDate = new Date();
+
+    // Find all labels where bestBefore is greater than or equal to today
+    const activeLabels = await LabelRepository.findLabels({
+      user: userId,
+      bestBefore: { $gte: currentDate },
+    });
+
+    // Format the dates to YYYY-MM-DD in the response
+    return activeLabels.map((label) => {
+      return {
+        _id: label._id,
+        user: label.user,
+        foodName: label.foodName,
+        bestBefore: new Date(label.bestBefore).toISOString().split("T")[0],
+        additionalInfo: label.additionalInfo,
+        __v: label.__v,
+      };
+    });
   },
 };
 

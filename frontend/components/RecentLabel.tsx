@@ -1,42 +1,16 @@
 import { View, Text, StyleSheet } from "react-native";
 import { useEffect, useState } from "react";
-
-interface Label {
-  id: number;
-  foodName: string;
-  bestBefore: string;
-  additionalInfo: string;
-}
-
-export default function RecentLabel({ Labels }: { Labels: Label[] }) {
-  const [recentLabels, setRecentLabels] = useState<Label[]>(Labels || []);
+import { expiryLabelType } from "@/types/expiryLabel";
+import Label from "./Label";
+export default function RecentLabel({ Labels }: { Labels: expiryLabelType[] }) {
+  const [recentLabels, setRecentLabels] = useState<expiryLabelType[]>(
+    Labels || []
+  );
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    setRecentLabels(Labels || []);
-  }, [Labels]);
-  if (Labels.length === 0) {
-    return (
-      <View style={styles.recentLabelContainer}>
-        <Text style={styles.text}>No recent labels found.</Text>
-      </View>
-    );
-  }
   return (
     <View style={styles.recentLabelContainer}>
       <Text style={styles.headerText}>Recent Labels</Text>
-      <View style={styles.innerContainer}>
-        {recentLabels.map((label) => (
-          <View key={label.id} style={styles.label}>
-            <Text style={styles.text}>Food Name: {label.foodName}</Text>
-            <Text style={styles.text}>Best Before: {label.bestBefore}</Text>
-            <Text style={styles.text}>
-              Additional Info: {label.additionalInfo}
-            </Text>
-          </View>
-        ))}
-        {loading && <Text>Loading...</Text>}
-      </View>
+      <Label labels={recentLabels} />
     </View>
   );
 }

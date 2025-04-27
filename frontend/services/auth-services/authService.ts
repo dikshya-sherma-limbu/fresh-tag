@@ -1,5 +1,5 @@
 import axios from "axios";
-import { API_ENDPOINTS } from "./api-config";
+import { API_ENDPOINTS } from "../api-config";
 import * as SecureStore from "expo-secure-store";
 
 // Token storage keys
@@ -111,16 +111,3 @@ export const isAuthenticated = async (): Promise<boolean> => {
   }
 };
 
-// // Create axios instance with auth header
-// export const createAuthenticatedAxiosInstance = async () => {
-//   const token = await getToken();
-
-//   return axios.create({
-//     baseURL: API_ENDPOINTS.USERS.BASE,
-//     timeout: 10000,
-//     headers: {
-//       Authorization: `Bearer ${token}`,
-//       "Content-Type": "application/json",
-//     },
-//   });
-// };
