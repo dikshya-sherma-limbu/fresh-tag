@@ -169,7 +169,7 @@ const LabelService = {
       user: userId,
       bestBefore: { $lt: currentDate }, //lt = less than
     });
-    //format the dates to YYYY-MM-DD in the response 
+    //format the dates to YYYY-MM-DD in the response
     //get multiple labels and map them to the response format
     return expiredLabels.map((label) => {
       return {
@@ -201,6 +201,82 @@ const LabelService = {
 
     // Format the dates to YYYY-MM-DD in the response
     return activeLabels.map((label) => {
+      return {
+        _id: label._id,
+        user: label.user,
+        foodName: label.foodName,
+        bestBefore: new Date(label.bestBefore).toISOString().split("T")[0],
+        additionalInfo: label.additionalInfo,
+        __v: label.__v,
+      };
+    });
+  },
+
+  // get current date labels for a user
+  getCurrentDateLabels: async (userId) => {
+    // Check if user exists
+    const user = await UserRepository.findById(userId);
+    if (!user) {
+      throw new Error("User does not exist");
+    }
+
+    // Create date objects for the start and end of the current day
+    const today = new Date();
+
+    // Start of today (00:00:00.000)
+    const startOfDay = new Date(today);
+    startOfDay.setHours(0, 0, 0, 0);
+
+    // End of today (23:59:59.999)
+    const endOfDay = new Date(today);
+    endOfDay.setHours(23, 59, 59, 999);
+
+    // Find all labels where bestBefore is between start and end of today
+    const currentDateLabels = await LabelRepository.findLabels({
+      user: userId,
+      bestBefore: {
+        $gte: startOfDay,
+        $lte: endOfDay,
+      },
+    });
+
+    // Format the dates to YYYY-MM-DD in the response
+    return currentDateLabels.map((label) => {
+      return {
+        _id: label._id,
+        user: label.user,
+        foodName: label.foodName,
+        bestBefore: new Date(label.bestBefore).toISOString().split("T")[0],
+        additionalInfo: label.additionalInfo,
+        __v: label.__v,
+      };
+    });
+  },
+
+  // get recent labels for a user - today and yesterday
+  getRecentLabels: async (userId) => {
+    // Check if user exists
+    const user = await UserRepository.findById(userId);
+    if (!user) {
+      throw new Error("User does not exist");
+    }
+
+    // Calculate date for two days ago from now (start of yesterday)
+    const today = new Date();
+    const twoDaysAgo = new Date(today);
+    twoDaysAgo.setDate(today.getDate() - 2);
+    twoDaysAgo.setHours(0, 0, 0, 0); // Set to beginning of day
+
+    console.log("Finding labels created since:", twoDaysAgo);
+
+    // Use your existing findLabels function
+    const recentLabels = await LabelRepository.findLabels({
+      user: userId,
+      createdAt: { $gte: twoDaysAgo },
+    });
+
+    // Format the dates to YYYY-MM-DD in the response
+    return recentLabels.map((label) => {
       return {
         _id: label._id,
         user: label.user,

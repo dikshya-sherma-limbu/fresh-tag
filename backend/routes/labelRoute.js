@@ -22,4 +22,10 @@ router.get("/expired-labels", labelController.getExpiredLabels);
 // GET - Get all active labels for a user
 router.get("/active-labels", labelController.getActiveLabels);
 
+//GET - Get current date labels for a user
+router.get("/current-date-labels", labelController.getCurrentDateLabels);
+
+//GET - Get recent labels for a user
+router.get("/recent-labels", labelController.getRecentLabels);
+
 module.exports = router;

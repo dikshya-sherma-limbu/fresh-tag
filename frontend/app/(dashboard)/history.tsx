@@ -4,11 +4,33 @@ import { expiryLabelType } from "@/types/expiryLabel";
 import CustomButton from "@/components/Button";
 import Label from "@/components/Label";
 import { useEffect, useState } from "react";
-import { getAllLabels } from "@/services/label-services/labelService";
+import {
+  getAllLabels,
+  getActiveLabels,
+  getExpiredLabels,
+  getCurrentDateLabels,
+} from "@/services/label-services/labelService";
 export default function History() {
   const [labels, setLabels] = useState<expiryLabelType[]>([]);
-  const [loading, setLoading] = useState(false);
-  //handle all labes
+
+  // Show the current date labels when the component mounts
+  useEffect(() => {
+    const fetchCurrentDateLabels = async () => {
+      try {
+        const response = await getCurrentDateLabels();
+        console.log("Current date labels fetched successfully:", response);
+        //if response is not null, set labels to the response data
+        if (response) {
+          setLabels(response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching current date labels:", error);
+      }
+    };
+    fetchCurrentDateLabels();
+  }, []);
+
+  //handle all labels
   const handleAllLabels = async () => {
     // Fetch all labels from the API
     try {
@@ -22,13 +44,53 @@ export default function History() {
     }
     console.log("All Labels");
   };
+  //handle expired labels
+  const handleExpiredLabels = async () => {
+    // Fetch all labels from the API
+    try {
+      const response = await getExpiredLabels();
+      //if response is not null, set labels to the response data
+      if (response) {
+        setLabels(response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching labels:", error);
+    }
+    console.log("Expired Labels");
+  };
+
+  //handle active labels
+  const handleActiveLabels = async () => {
+    // Fetch all labels from the API
+    try {
+      const response = await getActiveLabels();
+      //if response is not null, set labels to the response data
+      if (response) {
+        setLabels(response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching labels:", error);
+    }
+    console.log("Active Labels");
+  };
+
   return (
     <View style={styles.historyContainer}>
       <Navbar />
 
       <View style={styles.headerContainer}>
-        <CustomButton title="Active" onPress={() => {}} />
-        <CustomButton title="Expired" onPress={() => {}} />
+        <CustomButton
+          title="Active"
+          onPress={() => {
+            handleActiveLabels();
+          }}
+        />
+        <CustomButton
+          title="Expired"
+          onPress={() => {
+            handleExpiredLabels();
+          }}
+        />
         <CustomButton
           title="All"
           onPress={() => {

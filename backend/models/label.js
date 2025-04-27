@@ -18,6 +18,10 @@ const labelSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  createdAt: {
+    type: Date,
+    default: Date.now, // This will automatically set the current date/time when a document is created
+  },
 });
 
 const Label = mongoose.model("GeneratedLabel", labelSchema);

@@ -9,15 +9,26 @@ export default function Label({ labels }: { labels: expiryLabelType[] }) {
 
   //set labels to the labels passed in as props
   useEffect(() => {
-    if (labels) {
-      setLabels(labels);
-    }
+    setLoading(true); // Start loading when labels change
+
+    const timeout = setTimeout(() => {
+      if (labels) {
+        setLabels(labels);
+      }
+      setLoading(false); // Done loading after setting labels
+    }); // Fake 1 second loading delay (you can remove timeout in real use)
+
+    return () => clearTimeout(timeout); // Cleanup
   }, [labels]);
 
-  console.log(
-    "Labels",
-    Labels.forEach((label) => label.bestBefore)
-  );
+  if (loading) {
+    return (
+      <View style={styles.innerContainer}>
+        <Text style={styles.text}>Loading...</Text>
+      </View>
+    );
+  }
+
   if (Labels.length === 0) {
     //if no labels, show a message
     console.log("No labels found.");
@@ -42,7 +53,6 @@ export default function Label({ labels }: { labels: expiryLabelType[] }) {
           <Text style={styles.text}>{label.additionalInfo}</Text>
         </View>
       ))}
-      {loading && <Text>Loading...</Text>}
     </View>
   );
 }

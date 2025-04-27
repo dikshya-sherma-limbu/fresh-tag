@@ -22,5 +22,9 @@ export const API_ENDPOINTS = {
     GET_BY_FOOD: (foodName: string) =>
       `${BASE_URL}/api/labels/label/${foodName}`,
     DELETE: (foodName: string) => `${BASE_URL}/api/labels/label/${foodName}`,
+    EXPIRED_LABELS: `${BASE_URL}/api/labels/expired-labels`,
+    ACTIVE_LABELS: `${BASE_URL}/api/labels/active-labels`,
+    CURRENT_DATE_LABELS: `${BASE_URL}/api/labels/current-date-labels`,
+    RECENT_LABELS: `${BASE_URL}/api/labels/recent-labels`,
   },
 };

@@ -184,6 +184,58 @@ const LabelController = {
       });
     }
   },
+
+  // Get current date labels for a user
+  getCurrentDateLabels: async (req, res) => {
+    try {
+      const userId = req.user.id; // Get user ID from authenticated request
+      const currentDateLabels = await LabelService.getCurrentDateLabels(userId); // Call service to get current date labels
+      // Check if current date labels exist
+      if (!currentDateLabels || currentDateLabels.length === 0) {
+        return res.status(404).json({
+          success: false,
+          message: "No current date labels found",
+        });
+      }
+      return res.status(200).json({
+        success: true,
+        message: "Current date labels fetched successfully",
+        data: currentDateLabels,
+      });
+    } catch (error) {
+      console.error("Error in getCurrentDateLabels controller:", error);
+      return res.status(500).json({
+        success: false,
+        message: "Failed to fetch current date labels",
+      });
+    }
+  },
+
+  //Get recent labels for a user - today and yesterday
+  getRecentLabels: async (req, res) => {
+    try {
+      const userId = req.user.id; // Get user ID from authenticated request
+      const recentLabels = await LabelService.getRecentLabels(userId); // Call service to get recent labels
+      // Check if recent labels exist
+      if (!recentLabels || recentLabels.length === 0) {
+        return res.status(404).json({
+          success: false,
+          message: "No recent labels found",
+        });
+      }
+      return res.status(200).json({
+        success: true,
+        message: "Recent labels fetched successfully",
+        data: recentLabels,
+      });
+    } catch (error) {
+      console.error("Error in getRecentLabels controller:", error);
+      return res.status(500).json({
+        success: false,
+        message: "Failed to fetch recent labels",
+      });
+    }
+  },
 };
 
 module.exports = LabelController;
