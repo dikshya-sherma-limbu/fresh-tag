@@ -16,4 +16,10 @@ router.get("/all-labels", labelController.getAllLabels);
 router.get("/label/:foodName", labelController.getLabelByFoodName);
 // DELETE - Delete a label by food name
 router.delete("/label/:foodName", labelController.deleteLabelByFoodName);
+
+// GET - Get all expired labels for a user
+router.get("/expired-labels", labelController.getExpiredLabels);
+// GET - Get all active labels for a user
+router.get("/active-labels", labelController.getActiveLabels);
+
 module.exports = router;

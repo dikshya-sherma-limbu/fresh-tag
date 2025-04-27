@@ -154,6 +154,35 @@ const LabelService = {
     return label;
   },
 
+  //get all expired labels for a user
+  getExpiredLabels: async (userId) => {
+    //check if user exists
+    const user = await UserRepository.findById(userId);
+    if (!user) {
+      throw new Error("User does not exist");
+    }
+
+    //get curret date
+    const currentDate = new Date();
+    //find all labels where bestBefore is less than today
+    const expiredLabels = await LabelRepository.findLabels({
+      user: userId,
+      bestBefore: { $lt: currentDate }, //lt = less than
+    });
+    //format the dates to YYYY-MM-DD in the response 
+    //get multiple labels and map them to the response format
+    return expiredLabels.map((label) => {
+      return {
+        _id: label._id,
+        user: label.user,
+        foodName: label.foodName,
+        bestBefore: new Date(label.bestBefore).toISOString().split("T")[0],
+        additionalInfo: label.additionalInfo,
+        __v: label.__v,
+      };
+    });
+  },
+
   // Get active (non-expired) labels for a user
   getActiveLabels: async (userId) => {
     // Check if user exists

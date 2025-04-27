@@ -1,5 +1,4 @@
 const Label = require("../models/label");
-const User = require("../models/user");
 
 const LabelRepository = () => {
   //save a new label to the database
@@ -44,11 +43,17 @@ const LabelRepository = () => {
     return label;
   };
 
+  // get labels with custom crieteria
+  const findLabels = async (criteria) => {
+    return await Label.find(criteria).sort({ bestBefore: 1 }); // find labels based on criteria and sort by bestBefore date
+  };
+
   return {
     saveLabel,
     getAllLabels,
     getLabelByFoodName,
     deleteLabelByFoodName,
+    findLabels,
   };
 };
 

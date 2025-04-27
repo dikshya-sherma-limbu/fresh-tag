@@ -81,7 +81,7 @@ const LabelController = {
   },
 
   // Get a label by foodName
-  getLabelByFoodName: async (req, res) => { 
+  getLabelByFoodName: async (req, res) => {
     try {
       const foodName = req.params.foodName; // Get foodName from request parameters
       // Call service to get label by foodName
@@ -98,9 +98,7 @@ const LabelController = {
         message: "Label fetched successfully",
         data: label,
       });
-
-      
-    }catch (error) {
+    } catch (error) {
       console.error("Error in getLabelByFoodName controller:", error);
       return res.status(500).json({
         success: false,
@@ -131,6 +129,58 @@ const LabelController = {
       return res.status(500).json({
         success: false,
         message: "Failed to delete label",
+      });
+    }
+  },
+
+  // Get all expired labels for a user
+  getExpiredLabels: async (req, res) => {
+    try {
+      const userId = req.user.id; // Get user ID from authenticated request
+      const expiredLabels = await LabelService.getExpiredLabels(userId); // Call service to get expired labels
+      // Check if expired labels exist
+      if (!expiredLabels || expiredLabels.length === 0) {
+        return res.status(404).json({
+          success: false,
+          message: "No expired labels found",
+        });
+      }
+      return res.status(200).json({
+        success: true,
+        message: "Expired labels fetched successfully",
+        data: expiredLabels,
+      });
+    } catch (error) {
+      console.error("Error in getExpiredLabels controller:", error);
+      return res.status(500).json({
+        success: false,
+        message: "Failed to fetch expired labels",
+      });
+    }
+  },
+
+  //get all active labels for a user
+  getActiveLabels: async (req, res) => {
+    try {
+      const userId = req.user.id; // Get user ID from authenticated request
+      const activeLabels = await LabelService.getActiveLabels(userId); // Call service to get active labels
+      // Check if active labels exist
+      if (!activeLabels || activeLabels.length === 0) {
+        return res.status(404).json({
+          success: false,
+          message: "No active labels found",
+        });
+      }
+      return res.status(200).json({
+        success: true,
+        message: "Active labels fetched successfully",
+        data: activeLabels,
+      });
+    } catch (error) {
+      console.error("Error in getActiveLabels controller:", error);
+      return res.status(500).json({
+        success: false,
+        message: "Failed to fetch active labels",
       });
     }
   },
