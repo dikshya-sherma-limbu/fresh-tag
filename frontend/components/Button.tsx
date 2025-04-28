@@ -4,27 +4,30 @@ import { useState } from "react";
 interface CustomButtonProps {
   title: string;
   onPress: () => void;
-  loading?: boolean;
+  disabled?: boolean; // Add this prop
 }
 
 export default function CustomButton(CustomButtonProps: CustomButtonProps) {
-  const { title, onPress, loading } = CustomButtonProps;
-  const [isLoading, setIsLoading] = useState(loading || false);
-
-  const handlePress = () => {
-    setIsLoading(true);
-    onPress();
-    setIsLoading(false);
-  };
+  const { title, onPress, disabled } = CustomButtonProps;
 
   return (
     <View>
       <TouchableOpacity
-        onPress={handlePress}
-        disabled={isLoading}
-        style={styles.button}
+        onPress={onPress} // Call the onPress function when the button is pressed - e.g handleAllLabels
+        disabled={disabled} // Disable the button when the prop is true
+        style={[
+          styles.button,
+          disabled && styles.disabledButton, // Apply disabled styling when button is disabled
+        ]}
       >
-        <Text style={styles.text}>{title}</Text>
+        <Text
+          style={[
+            styles.text,
+            disabled && styles.disabledText, // Optional: style text differently when disabled
+          ]}
+        >
+          {title}
+        </Text>
       </TouchableOpacity>
     </View>
   );
@@ -37,6 +40,9 @@ const styles = StyleSheet.create({
     fontSize: 13,
     textAlign: "center",
   },
+  disabledText: {
+    color: "#8A8A8A", // Grayed out text when disabled
+  },
   button: {
     backgroundColor: "#FFFFFF",
     padding: 5,
@@ -45,10 +51,14 @@ const styles = StyleSheet.create({
     width: "100%",
     minWidth: 80,
     elevation: 10,
-    //ion-shadow: 0px 0px 10px #000000;
     shadowColor: "#000000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 4,
+  },
+  disabledButton: {
+    backgroundColor: "#F5F5F5", // Lighter background when disabled
+    elevation: 2, // Less pronounced shadow
+    shadowOpacity: 0.1,
   },
 });

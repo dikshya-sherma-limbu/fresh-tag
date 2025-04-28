@@ -10,16 +10,14 @@ export const createLabel = async (labelData: labelDataType) => {
       API_ENDPOINTS.LABELS.CREATE,
       labelData
     );
-    if (response.status !== 201) {
-      console.error("Response error:", response);
-      throw new Error("Failed to create label");
-    }
-    console.log("Label created successfully:", response.data);
-    // Handle the response as needed
     return response.data;
   } catch (error) {
-    console.error("Error creating label:", error);
-    throw error;
+    console.error("Service Error in createLabel:", error);
+    return {
+      success: false,
+      message: "Network error while creating label",
+      error: error instanceof Error ? error.message : "Unknown error",
+    };
   }
 };
 
@@ -27,16 +25,14 @@ export const createLabel = async (labelData: labelDataType) => {
 export const getAllLabels = async () => {
   try {
     const response = await apiClient.get(API_ENDPOINTS.LABELS.GET_ALL);
-    if (response.status !== 200) {
-      console.error("Response error:", response);
-      throw new Error("Failed to fetch labels");
-    }
-    console.log("Labels fetched successfully:", response.data);
-    // Handle the response as needed
     return response.data;
   } catch (error) {
-    console.error("Error fetching labels:", error);
-    throw error;
+    console.error("Service error in getAllLabels:", error);
+    return {
+      success: false,
+      message: "Network error while fetching labels",
+      error: error instanceof Error ? error.message : "Unknown error",
+    };
   }
 };
 
@@ -44,16 +40,14 @@ export const getAllLabels = async () => {
 export const getExpiredLabels = async () => {
   try {
     const response = await apiClient.get(API_ENDPOINTS.LABELS.EXPIRED_LABELS);
-    if (response.status !== 200) {
-      console.error("Response error:", response);
-      throw new Error("Failed to fetch expired labels");
-    }
-    console.log("Expired labels fetched successfully:", response.data);
-    // Handle the response as needed
     return response.data;
   } catch (error) {
-    console.error("Error fetching expired labels:", error);
-    throw error;
+    console.error("Service error in getExpiredLabels:", error);
+    return {
+      success: false,
+      message: "Network error while fetching expired labels",
+      error: error instanceof Error ? error.message : "Unknown error",
+    };
   }
 };
 
@@ -61,49 +55,45 @@ export const getExpiredLabels = async () => {
 export const getActiveLabels = async () => {
   try {
     const response = await apiClient.get(API_ENDPOINTS.LABELS.ACTIVE_LABELS);
-    if (response.status !== 200) {
-      console.error("Response error:", response);
-      throw new Error("Failed to fetch active labels");
-    }
-    console.log("Active labels fetched successfully:", response.data);
-    // Handle the response as needed
     return response.data;
   } catch (error) {
-    console.error("Error fetching active labels:", error);
-    throw error;
+    console.error("Service error in getActiveLabels:", error);
+    return {
+      success: false,
+      message: "Network error while fetching active labels",
+      error: error instanceof Error ? error.message : "Unknown error",
+    };
   }
 };
+
 // get the current date labels as the default labels
 export const getCurrentDateLabels = async () => {
   try {
     const response = await apiClient.get(
       API_ENDPOINTS.LABELS.CURRENT_DATE_LABELS
     );
-    if (response.status !== 200) {
-      console.error("Response error:", response);
-      throw new Error("Failed to fetch current date labels");
-    }
-    console.log("Current date labels fetched successfully:", response.data);
-    // Handle the response as needed
     return response.data;
   } catch (error) {
-    console.error("Error fetching current date labels:", error);
-    throw error;
+    console.error("Service Error in getCurrentDateLabels:", error);
+    return {
+      success: false,
+      message: "Network error while fetching labels",
+      error: error instanceof Error ? error.message : "Unknown error",
+    };
   }
 };
+
 //get the recent labels
 export const getRecentLabels = async () => {
   try {
     const response = await apiClient.get(API_ENDPOINTS.LABELS.RECENT_LABELS);
-    if (response.status !== 200) {
-      console.error("Response error:", response);
-      throw new Error("Failed to fetch recent labels");
-    }
-    console.log("Recent labels fetched successfully:", response.data);
-    // Handle the response as needed
     return response.data;
   } catch (error) {
-    console.error("Error fetching recent labels:", error);
-    throw error;
+    console.error("Service Error in getRecentLabels:", error);
+    return {
+      success: false,
+      message: "Network error while fetching recent labels",
+      error: error instanceof Error ? error.message : "Unknown error",
+    };
   }
 };

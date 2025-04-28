@@ -1,5 +1,5 @@
 export interface expiryLabelType {
-  id: string;
+  _id: string;
   foodName: string;
   bestBefore: Date;
   additionalInfo: string;

@@ -1,16 +1,43 @@
 import { View, Text, StyleSheet } from "react-native";
 import { useEffect, useState } from "react";
 import { expiryLabelType } from "@/types/expiryLabel";
+import { getRecentLabels } from "@/services/label-services/labelService";
 import Label from "./Label";
-export default function RecentLabel({ Labels }: { Labels: expiryLabelType[] }) {
-  const [recentLabels, setRecentLabels] = useState<expiryLabelType[]>(
-    Labels || []
-  );
+export default function RecentLabel() {
+  const [labels, setLabels] = useState<expiryLabelType[]>([]);
   const [loading, setLoading] = useState(false);
+  // Fetch recent labels when the component mounts
+  useEffect(() => {
+    const fetchRecentLabels = async () => {
+      setLoading(true);
+      try {
+        const response = await getRecentLabels();
+        console.log("Recent labels fetched successfully:", response);
+        //if response is not null, set labels to the response data
+        if (response) {
+          setLabels(response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching recent labels:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchRecentLabels();
+  }, []);
+  if (loading) {
+    return (
+      <View style={styles.recentLabelContainer}>
+        <Text style={styles.headerText}>Loading...</Text>
+      </View>
+    );
+  }
   return (
     <View style={styles.recentLabelContainer}>
       <Text style={styles.headerText}>Recent Labels</Text>
-      <Label labels={recentLabels} />
+      <View style={styles.labelListContainer}>
+        <Label labels={labels} />
+      </View>
     </View>
   );
 }
@@ -21,6 +48,10 @@ const styles = StyleSheet.create({
     padding: 15,
     width: "90%",
     borderRadius: 10,
+    flex: 1, // Allow this container to expand
+  },
+  labelListContainer: {
+    flex: 1, // This ensures the FlatList has room to scroll
   },
   innerContainer: {
     flexDirection: "column",

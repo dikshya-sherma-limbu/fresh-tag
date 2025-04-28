@@ -1,35 +1,9 @@
-import { View, Text, StyleSheet } from "react-native";
-import { useEffect, useState } from "react";
+import { View, Text, StyleSheet, FlatList, Platform } from "react-native";
 
 import { expiryLabelType } from "@/types/expiryLabel";
 
 export default function Label({ labels }: { labels: expiryLabelType[] }) {
-  const [Labels, setLabels] = useState<expiryLabelType[]>(labels || []);
-  const [loading, setLoading] = useState(false);
-
-  //set labels to the labels passed in as props
-  useEffect(() => {
-    setLoading(true); // Start loading when labels change
-
-    const timeout = setTimeout(() => {
-      if (labels) {
-        setLabels(labels);
-      }
-      setLoading(false); // Done loading after setting labels
-    }); // Fake 1 second loading delay (you can remove timeout in real use)
-
-    return () => clearTimeout(timeout); // Cleanup
-  }, [labels]);
-
-  if (loading) {
-    return (
-      <View style={styles.innerContainer}>
-        <Text style={styles.text}>Loading...</Text>
-      </View>
-    );
-  }
-
-  if (Labels.length === 0) {
+  if (labels.length === 0) {
     //if no labels, show a message
     console.log("No labels found.");
     return (
@@ -38,22 +12,34 @@ export default function Label({ labels }: { labels: expiryLabelType[] }) {
       </View>
     );
   }
+  // Combine styles with platform-specific shadow
+  const labelStyles = [
+    styles.label,
+    Platform.OS === "android" ? styles.androidShadow : styles.iosShadow,
+  ];
+  // Render an individual label item
+  const renderItem = ({ item }: { item: expiryLabelType }) => (
+    <View style={labelStyles}>
+      <View style={styles.label}>
+        <View style={styles.labelHeader}>
+          <Text style={styles.text}>{item.foodName}</Text>
+          <Text style={styles.text}>
+            {item.bestBefore ? item.bestBefore.toString() : "N/A"}
+          </Text>
+        </View>
+        <Text style={styles.text}>{item.additionalInfo}</Text>
+      </View>
+    </View>
+  );
 
   return (
-    <View style={styles.innerContainer}>
-      {Labels.map((label) => (
-        <View key={label.id} style={styles.label}>
-          <View style={styles.labelHeader}>
-            <Text style={styles.text}>{label.foodName}</Text>
-            <Text style={styles.text}>
-              {label.bestBefore ? label.bestBefore.toString() : "N/A"}
-            </Text>
-          </View>
-
-          <Text style={styles.text}>{label.additionalInfo}</Text>
-        </View>
-      ))}
-    </View>
+    <FlatList
+      data={labels}
+      renderItem={renderItem}
+      keyExtractor={(item) => item._id}
+      contentContainerStyle={styles.listContainer}
+      ItemSeparatorComponent={() => <View style={styles.separator} />}
+    />
   );
 }
 const styles = StyleSheet.create({
@@ -69,14 +55,33 @@ const styles = StyleSheet.create({
     textAlign: "left",
     padding: 4,
   },
+  listContainer: {
+    flexGrow: 1,
+  },
+  separator: {
+    height: 20, // This creates the gap between items
+  },
   label: {
     borderWidth: 2,
     borderRadius: 10,
     padding: 10,
     borderColor: "#ccc",
     backgroundColor: "#E8E8E8",
-    //shadow
-    boxShadow: "10 7px 15px rgba(0, 0, 0, 0.2)",
+  },
+  // Specific shadow styles for Android
+  androidShadow: {
+    elevation: 10,
+  },
+  // Specific shadow styles for iOS
+  iosShadow: {
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+
+    shadowOpacity: 0.5,
+    shadowRadius: 5,
   },
   labelHeader: {
     justifyContent: "space-between",

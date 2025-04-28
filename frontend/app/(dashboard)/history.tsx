@@ -12,19 +12,31 @@ import {
 } from "@/services/label-services/labelService";
 export default function History() {
   const [labels, setLabels] = useState<expiryLabelType[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   // Show the current date labels when the component mounts
   useEffect(() => {
     const fetchCurrentDateLabels = async () => {
+      setIsLoading(true);
+      setError(null);
       try {
         const response = await getCurrentDateLabels();
-        console.log("Current date labels fetched successfully:", response);
-        //if response is not null, set labels to the response data
-        if (response) {
-          setLabels(response.data);
+
+        if (response.success) {
+          setLabels(response.data || []);
+        } else {
+          console.error(
+            "Error fetching current date labels:",
+            response.message
+          );
+          setError(response.message || "Failed to load labels");
         }
       } catch (error) {
-        console.error("Error fetching current date labels:", error);
+        console.error("Unexpected error in current labels:", error);
+        setError("An unexpected error occurred");
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchCurrentDateLabels();
@@ -32,46 +44,65 @@ export default function History() {
 
   //handle all labels
   const handleAllLabels = async () => {
-    // Fetch all labels from the API
+    setIsLoading(true);
+    setError(null);
     try {
       const response = await getAllLabels();
-      //if response is not null, set labels to the response data
-      if (response) {
-        setLabels(response.data);
+
+      if (response.success) {
+        setLabels(response.data || []);
+      } else {
+        console.error("Error fetching all labels:", response.message);
+        setError(response.message || "Failed to load labels");
       }
     } catch (error) {
-      console.error("Error fetching labels:", error);
+      console.error("Unexpected error fetching all labels:", error);
+      setError("An unexpected error occurred");
+    } finally {
+      setIsLoading(false);
     }
-    console.log("All Labels");
   };
+
   //handle expired labels
   const handleExpiredLabels = async () => {
-    // Fetch all labels from the API
+    setIsLoading(true);
+    setError(null);
     try {
       const response = await getExpiredLabels();
-      //if response is not null, set labels to the response data
-      if (response) {
-        setLabels(response.data);
+
+      if (response.success) {
+        setLabels(response.data || []);
+      } else {
+        console.error("Error fetching expired labels:", response.message);
+        setError(response.message || "Failed to load expired labels");
       }
     } catch (error) {
-      console.error("Error fetching labels:", error);
+      console.error("Unexpected error fetching expired labels:", error);
+      setError("An unexpected error occurred");
+    } finally {
+      setIsLoading(false);
     }
-    console.log("Expired Labels");
   };
 
   //handle active labels
   const handleActiveLabels = async () => {
-    // Fetch all labels from the API
+    setIsLoading(true);
+    setError(null);
     try {
       const response = await getActiveLabels();
-      //if response is not null, set labels to the response data
-      if (response) {
-        setLabels(response.data);
+
+      if (response.success) {
+        setLabels(response.data || []);
+      } else {
+        console.error("Error fetching active labels:", response.message);
+        setError(response.message || "Failed to load active labels");
       }
     } catch (error) {
-      console.error("Error fetching labels:", error);
+      console.error("Unexpected error fetching active labels:", error);
+      setError("An unexpected error occurred");
+    } finally {
+      setIsLoading(false);
     }
-    console.log("Active Labels");
   };
 
   return (
@@ -81,29 +112,36 @@ export default function History() {
       <View style={styles.headerContainer}>
         <CustomButton
           title="Active"
-          onPress={() => {
-            handleActiveLabels();
-          }}
+          onPress={handleActiveLabels}
+          disabled={isLoading}
         />
         <CustomButton
           title="Expired"
-          onPress={() => {
-            handleExpiredLabels();
-          }}
+          onPress={handleExpiredLabels}
+          disabled={isLoading}
         />
         <CustomButton
           title="All"
-          onPress={() => {
-            handleAllLabels();
-          }}
+          onPress={handleAllLabels}
+          disabled={isLoading}
         />
       </View>
+
       <View style={styles.labelContainer}>
-        <Label labels={labels} />
+        {isLoading ? (
+          <Text style={styles.statusText}>Loading labels...</Text>
+        ) : error ? (
+          <Text style={styles.errorText}>{error}</Text>
+        ) : labels.length > 0 ? (
+          <Label labels={labels} />
+        ) : (
+          <Text style={styles.statusText}>No labels found</Text>
+        )}
       </View>
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   historyContainer: {
     alignItems: "center",
@@ -130,6 +168,8 @@ const styles = StyleSheet.create({
     padding: 15,
     width: "90%",
     borderRadius: 10,
+    minHeight: 200,
+    justifyContent: "center",
   },
   label: {
     borderWidth: 2,
@@ -137,5 +177,15 @@ const styles = StyleSheet.create({
     padding: 10,
     borderColor: "#ccc",
     backgroundColor: "#86AB89",
+  },
+  statusText: {
+    textAlign: "center",
+    color: "#666",
+    fontSize: 16,
+  },
+  errorText: {
+    textAlign: "center",
+    color: "#d32f2f",
+    fontSize: 16,
   },
 });

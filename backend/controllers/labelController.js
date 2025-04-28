@@ -49,6 +49,7 @@ const LabelController = {
         .json({
           success: false,
           message: error.message || "Failed to create label",
+          error: error.message,
         });
     }
   },
@@ -59,23 +60,21 @@ const LabelController = {
       const userId = req.user.id; // Get user ID from authenticated request
       // Call service to get all labels for the user
       const allLabels = await LabelService.getAllLabels(userId);
-      // Check if labels exist
-      if (!allLabels || allLabels.length === 0) {
-        return res.status(404).json({
-          success: false,
-          message: "No labels found",
-        });
-      }
+      // Return standard response format with empty array if no labels
       return res.status(200).json({
         success: true,
-        message: "Labels fetched successfully",
-        data: allLabels,
+        message:
+          allLabels.length > 0
+            ? "Labels fetched successfully"
+            : "No labels found",
+        data: allLabels || [],
       });
     } catch (error) {
       console.error("Error in getAllLabels controller:", error);
       return res.status(500).json({
         success: false,
         message: "Failed to fetch labels",
+        error: error.message,
       });
     }
   },
@@ -91,6 +90,7 @@ const LabelController = {
         return res.status(404).json({
           success: false,
           message: "Label not found",
+          data: null,
         });
       }
       return res.status(200).json({
@@ -103,6 +103,7 @@ const LabelController = {
       return res.status(500).json({
         success: false,
         message: "Failed to fetch label",
+        error: error.message,
       });
     }
   },
@@ -117,6 +118,7 @@ const LabelController = {
         return res.status(404).json({
           success: false,
           message: "Label not found",
+          data: null,
         });
       }
       return res.status(200).json({
@@ -129,6 +131,7 @@ const LabelController = {
       return res.status(500).json({
         success: false,
         message: "Failed to delete label",
+        error: error.message,
       });
     }
   },
@@ -138,23 +141,22 @@ const LabelController = {
     try {
       const userId = req.user.id; // Get user ID from authenticated request
       const expiredLabels = await LabelService.getExpiredLabels(userId); // Call service to get expired labels
-      // Check if expired labels exist
-      if (!expiredLabels || expiredLabels.length === 0) {
-        return res.status(404).json({
-          success: false,
-          message: "No expired labels found",
-        });
-      }
+
+      // Return standard response format with empty array if no labels
       return res.status(200).json({
         success: true,
-        message: "Expired labels fetched successfully",
-        data: expiredLabels,
+        message:
+          expiredLabels.length > 0
+            ? "Expired labels fetched successfully"
+            : "No expired labels found",
+        data: expiredLabels || [],
       });
     } catch (error) {
       console.error("Error in getExpiredLabels controller:", error);
       return res.status(500).json({
         success: false,
         message: "Failed to fetch expired labels",
+        error: error.message,
       });
     }
   },
@@ -164,23 +166,22 @@ const LabelController = {
     try {
       const userId = req.user.id; // Get user ID from authenticated request
       const activeLabels = await LabelService.getActiveLabels(userId); // Call service to get active labels
-      // Check if active labels exist
-      if (!activeLabels || activeLabels.length === 0) {
-        return res.status(404).json({
-          success: false,
-          message: "No active labels found",
-        });
-      }
+
+      // Return standard response format with empty array if no labels
       return res.status(200).json({
         success: true,
-        message: "Active labels fetched successfully",
-        data: activeLabels,
+        message:
+          activeLabels.length > 0
+            ? "Active labels fetched successfully"
+            : "No active labels found",
+        data: activeLabels || [],
       });
     } catch (error) {
       console.error("Error in getActiveLabels controller:", error);
       return res.status(500).json({
         success: false,
         message: "Failed to fetch active labels",
+        error: error.message,
       });
     }
   },
@@ -190,23 +191,22 @@ const LabelController = {
     try {
       const userId = req.user.id; // Get user ID from authenticated request
       const currentDateLabels = await LabelService.getCurrentDateLabels(userId); // Call service to get current date labels
-      // Check if current date labels exist
-      if (!currentDateLabels || currentDateLabels.length === 0) {
-        return res.status(404).json({
-          success: false,
-          message: "No current date labels found",
-        });
-      }
+
+      // Return standard response format with empty array if no labels
       return res.status(200).json({
         success: true,
-        message: "Current date labels fetched successfully",
-        data: currentDateLabels,
+        message:
+          currentDateLabels.length > 0
+            ? "Current date labels fetched successfully"
+            : "No current date labels found",
+        data: currentDateLabels || [],
       });
     } catch (error) {
       console.error("Error in getCurrentDateLabels controller:", error);
       return res.status(500).json({
         success: false,
         message: "Failed to fetch current date labels",
+        error: error.message,
       });
     }
   },
@@ -216,23 +216,22 @@ const LabelController = {
     try {
       const userId = req.user.id; // Get user ID from authenticated request
       const recentLabels = await LabelService.getRecentLabels(userId); // Call service to get recent labels
-      // Check if recent labels exist
-      if (!recentLabels || recentLabels.length === 0) {
-        return res.status(404).json({
-          success: false,
-          message: "No recent labels found",
-        });
-      }
+
+      // Return standard response format with empty array if no labels
       return res.status(200).json({
         success: true,
-        message: "Recent labels fetched successfully",
-        data: recentLabels,
+        message:
+          recentLabels.length > 0
+            ? "Recent labels fetched successfully"
+            : "No recent labels found",
+        data: recentLabels || [],
       });
     } catch (error) {
       console.error("Error in getRecentLabels controller:", error);
       return res.status(500).json({
         success: false,
         message: "Failed to fetch recent labels",
+        error: error.message,
       });
     }
   },
