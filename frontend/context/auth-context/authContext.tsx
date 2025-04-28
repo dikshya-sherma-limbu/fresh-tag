@@ -36,7 +36,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       const token = await getToken();
       if (token) {
         const isValideToken = await isAuthenticated();
+
         if (isValideToken) {
+          console.log("Token is valid, user is authenticated.");
           setIsUserValidated(true);
         } else {
           setIsUserValidated(false);
@@ -62,9 +64,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           console.error("Invalid token received:", response.token);
           return response; // Token is invalid, return early
         }
-
+        console.log("is user validated");
         setIsUserValidated(true);
-        setUser(response.user); // Assuming the response contains user data
+        console.log("User validated successfully:", response.username);
+        setUser(response.username); // Assuming the response contains user data
 
         return response;
       } else {

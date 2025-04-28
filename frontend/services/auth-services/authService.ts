@@ -19,7 +19,7 @@ export interface RegisterCredentials {
 
 export interface User {
   id: string;
-  name: string;
+  username: string;
   email: string;
 }
 
@@ -46,7 +46,8 @@ export const getToken = async (): Promise<string | null> => {
     return null;
   }
 };
-// Remove token and user data on logout
+
+// Remove token and user data on logout - this is called in the logout function
 export const removeAuthData = async (): Promise<void> => {
   try {
     await SecureStore.deleteItemAsync(TOKEN_KEY);
@@ -56,6 +57,7 @@ export const removeAuthData = async (): Promise<void> => {
   }
 };
 
+// Login function
 export const login = async (credentials: LoginCredentials) => {
   try {
     const response = await axios.post(API_ENDPOINTS.USERS.LOGIN, credentials, {
@@ -110,4 +112,3 @@ export const isAuthenticated = async (): Promise<boolean> => {
     return false;
   }
 };
-

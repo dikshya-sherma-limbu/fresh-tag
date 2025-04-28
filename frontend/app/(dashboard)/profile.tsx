@@ -1,9 +1,11 @@
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-
+import ProfileHeader from "@/components/ProfileHeader";
+import Setting from "@/components/Setting";
 export default function Profile() {
   return (
-    <View>
-      <Text style={styles.text}>Profile Page</Text>
+    <View style={styles.profileContainer}>
+      <ProfileHeader />
+      <Setting />
     </View>
   );
 }
@@ -11,9 +13,7 @@ export default function Profile() {
 const styles = StyleSheet.create({
   profileContainer: {
     flex: 1,
-    justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#fff",
   },
   text: {
     fontSize: 20,
