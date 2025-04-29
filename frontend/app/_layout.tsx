@@ -27,14 +27,19 @@ function RootLayoutContent() {
   useEffect(() => {
     if (appIsReady) {
       if (isUserValidated) {
+        console.log("User is authenticated, redirecting to dashboard");
         router.replace("/(dashboard)");
       } else {
+        console.log("User is not authenticated, redirecting to login");
         router.replace("/(auth)/login");
       }
     }
   }, [appIsReady, isUserValidated]);
 
-  if (!appIsReady) return null;
+  if (!appIsReady) {
+    console.log("App is not ready yet");
+    return null;
+  }
 
   return (
     <ThemeProvider value={DefaultTheme}>
