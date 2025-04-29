@@ -2,10 +2,11 @@ import { createContext, useContext, useEffect, useState } from "react";
 import {
   login as loginApi,
   getToken,
-  User,
   LoginCredentials,
   isAuthenticated,
 } from "../../services/auth-services/authService";
+import { User } from "../../types/User"; // Importing the User type for type safety
+
 interface AuthContextType {
   isLoading: boolean;
   user: User | null;

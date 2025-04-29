@@ -1,14 +1,26 @@
-import { Button, View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  Button,
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  StyleProp,
+  ViewStyle,
+  TextStyle,
+} from "react-native";
 import { useState } from "react";
 
 interface CustomButtonProps {
   title: string;
   onPress: () => void;
   disabled?: boolean; // Add this prop
+  additionalStyle?: StyleProp<ViewStyle>; // For button container
+  textStyle?: StyleProp<TextStyle>; // For text style
 }
 
 export default function CustomButton(CustomButtonProps: CustomButtonProps) {
-  const { title, onPress, disabled } = CustomButtonProps;
+  const { title, onPress, disabled, additionalStyle, textStyle } =
+    CustomButtonProps;
 
   return (
     <View>
@@ -17,13 +29,16 @@ export default function CustomButton(CustomButtonProps: CustomButtonProps) {
         disabled={disabled} // Disable the button when the prop is true
         style={[
           styles.button,
-          disabled && styles.disabledButton, // Apply disabled styling when button is disabled
+          disabled && styles.disabledButton,
+          additionalStyle, // Apply disabled styling when button is disabled
         ]}
       >
         <Text
           style={[
             styles.text,
-            disabled && styles.disabledText, // Optional: style text differently when disabled
+            disabled && styles.disabledText,
+            textStyle,
+            // Optional: style text differently when disabled
           ]}
         >
           {title}

@@ -2,7 +2,7 @@ import { View, StyleSheet, Text, Switch, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 import { removeAuthData } from "@/services/auth-services/authService";
-import CustomButton from "./Button";
+
 import { router } from "expo-router";
 
 export default function Setting() {
@@ -42,7 +42,11 @@ export default function Setting() {
       <View style={styles.sectionListComponent}>
         <View style={styles.innerSectionListComponent}>
           <Ionicons name="person" size={35} color="#4B5945" />
-          <Text style={styles.text}>Profile Details</Text>
+          <TouchableOpacity
+            onPress={() => router.push("/(dashboard)/profile/profile-details")}
+          >
+            <Text style={styles.text}>Profile Details</Text>
+          </TouchableOpacity>
         </View>
       </View>
       {/* Logout */}
