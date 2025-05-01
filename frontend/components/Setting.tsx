@@ -49,7 +49,7 @@ export default function Setting() {
           </TouchableOpacity>
         </View>
       </View>
-      {/* Logout */}
+      {/* Logout 84 Falmouth Ave, Scarborough, ON M1K 4M8 */}
       <View style={styles.sectionListComponent}>
         <View style={styles.innerSectionListComponent}>
           <Ionicons name="log-out" size={30} color="#4B5945" />
@@ -98,12 +98,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     elevation: 10,
     alignItems: "center",
-    marginBottom: 20,
+    marginBottom: 10,
+    marginTop: 10,
     height: 50,
   },
   innerSectionListComponent: {
     flexDirection: "row",
     gap: 12,
+    alignItems: "center",
+  },
+  innerContainer: {
+    flex: 1,
+    justifyContent: "center",
     alignItems: "center",
   },
 });
