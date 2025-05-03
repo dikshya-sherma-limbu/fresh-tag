@@ -8,32 +8,90 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Feather from "@expo/vector-icons/Feather";
-import { User } from "@/types/User";
+import { UserDetails, User } from "@/types/User";
 import CustomButton from "./Button";
+import { useEffect, useState } from "react";
+
+import { getUserDetails } from "@/services/user-services/userService";
+import { isAuthenticated } from "@/services/auth-services/authService";
 export default function UpdateProfile() {
-  const labels: string[] = ["username", "email", "password"];
+  const titles: string[] = ["username", "email", "password"];
+
+  const [user, setUser] = useState<UserDetails>({} as UserDetails);
+  const [updateUser, setUpdateUser] = useState<User | null>(null);
+  const [password, setPassword] = useState<string>("");
+  const [isEnabled, setIsEnabled] = useState(false);
+
+  useEffect(() => {
+    const checkAuthenticationAndFetch = async () => {
+      if (await isAuthenticated()) {
+        fetchUserDetails();
+      }
+    };
+    const fetchUserDetails = async () => {
+      try {
+        const response = await getUserDetails();
+        if (response) {
+          console.log("User details fetched successfully:", response);
+          setUser(response);
+        }
+      } catch (error) {
+        console.error("Error fetching user details:", error);
+      }
+    };
+    checkAuthenticationAndFetch();
+  }, []);
+
+  // Handle input changes
+  const handleChange = (field: string, value: string) => {
+    if (user) {
+      setUser((prevUser) => ({
+        ...prevUser,
+        [field]: value,
+      }));
+    }
+  };
+
+  const editableFields = () => {
+    setIsEnabled((prevState) => !prevState);
+  };
   return (
     <View style={styles.updateProfileContainer}>
-      {labels.map((label, index) => (
-        <View style={styles.sectionListComponent} key={index}>
-          <Text style={styles.text}>{label}</Text>
-          <TextInput style={styles.textInput} />
-          <Feather name="edit-2" size={22} style={styles.editIcon} />
-        </View>
-      ))}
+      {titles.map((label, index) => {
+        // Get the appropriate value based on field name
+        let inputValue = "";
+        if (label === "password") {
+          inputValue = password;
+        } else if (user) {
+          // Type assertion to handle potential undefined
+          const userValue = user[label as keyof UserDetails];
+          console.log("userValue:", userValue);
+          inputValue = typeof userValue === "string" ? userValue : "";
+        }
+        return (
+          <View style={styles.sectionListComponent} key={index}>
+            <Text style={styles.text}>{label}</Text>
+            <TextInput
+              style={styles.textInput}
+              value={inputValue}
+              onChangeText={(text) => handleChange(label, text)}
+              secureTextEntry={label === "password"}
+              editable={isEnabled}
+            />
+            <Feather
+              name="edit-2"
+              size={22}
+              style={styles.editIcon}
+              onPress={editableFields}
+            />
+          </View>
+        );
+      })}
+
       <View style={styles.buttonContainer}>
         <CustomButton
           title="Update Profile"
           onPress={() => console.log("Update Profile")}
-          // additionalStyle={{
-          //   height: 50,
-          //   width: "100%",
-          // }}
-          // textStyle={{
-          //   fontSize: 18,
-          //   padding: 10,
-          //   color: "#4B5945",
-          // }}
         />
       </View>
     </View>

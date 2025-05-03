@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { expiryLabelType } from "@/types/expiryLabel";
 import { getRecentLabels } from "@/services/label-services/labelService";
 import Label from "./Label";
+import { isAuthenticated } from "@/services/auth-services/authService";
 export default function RecentLabel() {
   const [labels, setLabels] = useState<expiryLabelType[]>([]);
   const [loading, setLoading] = useState(false);
@@ -23,7 +24,14 @@ export default function RecentLabel() {
         setLoading(false);
       }
     };
-    fetchRecentLabels();
+
+    const checkAuthenticationAndFetch = async () => {
+      if (await isAuthenticated()) {
+        fetchRecentLabels();
+      }
+    };
+
+    checkAuthenticationAndFetch();
   }, []);
   if (loading) {
     return (

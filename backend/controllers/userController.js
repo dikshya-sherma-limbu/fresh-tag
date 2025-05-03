@@ -52,9 +52,7 @@ const getUserById = async (req, res) => {
   console.log("Controller userId:", userId, typeof userId);
   try {
     const user = await userService.getUserById(userId);
-    res
-      .status(200)
-      .json({ message: "User details fetched successfully", user });
+    res.status(200).json(user); // Send the user details as a response
   } catch (err) {
     console.error("Controller error:", err);
     res.status(400).json({ message: err.message });

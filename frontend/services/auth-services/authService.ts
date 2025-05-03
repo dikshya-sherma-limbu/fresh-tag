@@ -17,8 +17,6 @@ export interface RegisterCredentials {
   password: string;
 }
 
-
-
 export interface AuthResponse {
   token: string;
 }

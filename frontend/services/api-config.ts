@@ -12,6 +12,7 @@ export const API_ENDPOINTS = {
     REGISTER: `${BASE_URL}/api/users/register`,
     PROFILE: `${BASE_URL}/api/users/profile`,
     AUTH_TOKEN: `${BASE_URL}/api/users/authenticate-user`,
+    USER_DETAILS: `${BASE_URL}/api/users/user-details`,
   },
 
   // Label related endpoints
