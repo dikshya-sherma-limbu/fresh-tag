@@ -3,9 +3,11 @@ const { body } = require("express-validator");
 const {
   registerUser,
   loginUser,
+  getUserById,
   validateUserToken,
 } = require("../controllers/userController");
 const authenticateUser = require("../middlewares/authenticateUser"); // Import the authentication middleware
+
 const router = express.Router();
 
 // POST - Register a new user
@@ -30,6 +32,7 @@ router.post("/login", loginUser);
 //POST - Validate the user token
 router.get("/authenticate-user", authenticateUser, validateUserToken);
 
-//POST - generate a expiy label
+//GET - Get user details by ID
+router.get("/user-details", authenticateUser, getUserById);
 
 module.exports = router;

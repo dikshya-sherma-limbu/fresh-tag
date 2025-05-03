@@ -38,12 +38,29 @@ const loginUser = async (req, res) => {
     console.log("login success", user);
     res.json({ token, username: user.username });
   } catch (err) {
+    console.error("Login error:", err); // Log the error for debugging
     res.status(400).json({ message: err.message });
   }
 };
 const validateUserToken = async (req, res) => {
   return res.status(200).json({ message: "Token is valid", user: req.user }); // Send the user details if token is valid
 };
+
+//get user details by id
+const getUserById = async (req, res) => {
+  const userId = req.user.id;
+  console.log("Controller userId:", userId, typeof userId);
+  try {
+    const user = await userService.getUserById(userId);
+    res
+      .status(200)
+      .json({ message: "User details fetched successfully", user });
+  } catch (err) {
+    console.error("Controller error:", err);
+    res.status(400).json({ message: err.message });
+  }
+};
+
 // const logoutUser = async (req, res) => {
 //   try {
 //     await userService.logoutUser();
@@ -56,4 +73,5 @@ module.exports = {
   registerUser,
   loginUser,
   validateUserToken,
+  getUserById,
 };

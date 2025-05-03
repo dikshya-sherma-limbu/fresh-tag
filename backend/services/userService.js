@@ -42,6 +42,16 @@ const UserService = {
     return { token, user };
   },
 
+  // Get user details by ID
+  getUserById: async (id) => {
+    console.log("Service getUserById called with:", id, typeof id);
+    const user = await userRepository.findById(id);
+    if (!user) {
+      throw new Error("User not found");
+    }
+    return user;
+  },
+
   // // // Logout a user
   // logoutUser: async ({user}) => {
   //   // Logout logic

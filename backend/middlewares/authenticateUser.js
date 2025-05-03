@@ -15,6 +15,7 @@ const authenticateUser = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    console.log("Decoded token:", decoded); // Log the decoded token for debugging
     req.user = decoded; // Store user details in request object
     next(); // Proceed to next middleware - means user is authenticated
   } catch (error) {

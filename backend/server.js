@@ -28,7 +28,11 @@ dbConnection();
 app.use("/api/users", userRoutes);
 app.use("/api/labels", labelRoutes);
 
-const PORT = process.env.PORT;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+const PORT = process.env.PORT || 2003;
+app
+  .listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  })
+  .on("error", (err) => {
+    console.error("Server failed to start:", err);
+  });
