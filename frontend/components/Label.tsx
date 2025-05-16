@@ -1,8 +1,58 @@
 import { View, Text, StyleSheet, FlatList, Platform } from "react-native";
 
 import { expiryLabelType } from "@/types/expiryLabel";
-
+import { useTheme } from "@/context/theme-context/themeContext";
 export default function Label({ labels }: { labels: expiryLabelType[] }) {
+  const { theme } = useTheme(); // Get the theme from the context
+
+  // Create styles with the current theme
+  const styles = StyleSheet.create({
+    innerContainer: {
+      flexDirection: "column",
+      justifyContent: "space-around",
+      gap: 20,
+    },
+    text: {
+      color: theme.colors.text,
+      fontFamily: "sans-serif",
+      fontSize: 15,
+      textAlign: "left",
+      padding: 4,
+    },
+    listContainer: {
+      flexGrow: 1,
+    },
+    separator: {
+      height: 20, // This creates the gap between items
+    },
+    label: {
+      borderWidth: 2,
+      borderRadius: 10,
+      padding: 10,
+      borderColor: theme.colors.border,
+      backgroundColor: theme.colors.background,
+    },
+    // Specific shadow styles for Android
+    androidShadow: {
+      elevation: 10,
+    },
+    // Specific shadow styles for iOS
+    iosShadow: {
+      shadowColor: theme.colors.shadow,
+      shadowOffset: {
+        width: 0,
+        height: 3,
+      },
+
+      shadowOpacity: 0.5,
+      shadowRadius: 5,
+    },
+    labelHeader: {
+      justifyContent: "space-between",
+      flexDirection: "row",
+    },
+  });
+
   if (labels.length === 0) {
     //if no labels, show a message
     console.log("No labels found.");
@@ -42,49 +92,3 @@ export default function Label({ labels }: { labels: expiryLabelType[] }) {
     />
   );
 }
-const styles = StyleSheet.create({
-  innerContainer: {
-    flexDirection: "column",
-    justifyContent: "space-around",
-    gap: 20,
-  },
-  text: {
-    color: "black",
-    fontFamily: "sans-serif",
-    fontSize: 15,
-    textAlign: "left",
-    padding: 4,
-  },
-  listContainer: {
-    flexGrow: 1,
-  },
-  separator: {
-    height: 20, // This creates the gap between items
-  },
-  label: {
-    borderWidth: 2,
-    borderRadius: 10,
-    padding: 10,
-    borderColor: "#ccc",
-    backgroundColor: "#E8E8E8",
-  },
-  // Specific shadow styles for Android
-  androidShadow: {
-    elevation: 10,
-  },
-  // Specific shadow styles for iOS
-  iosShadow: {
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 3,
-    },
-
-    shadowOpacity: 0.5,
-    shadowRadius: 5,
-  },
-  labelHeader: {
-    justifyContent: "space-between",
-    flexDirection: "row",
-  },
-});

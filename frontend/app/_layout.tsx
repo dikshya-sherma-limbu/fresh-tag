@@ -2,10 +2,11 @@ import { router, Slot } from "expo-router";
 import { useEffect, useState } from "react";
 import * as SplashScreen from "expo-splash-screen";
 import { useFonts } from "expo-font";
-import { ThemeProvider, DefaultTheme } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import { useAuth } from "../context/auth-context/authContext";
-
+import { AuthProvider } from "../context/auth-context/authContext";
+import { NavigationContainer } from "@react-navigation/native";
+import { useTheme, ThemeProvider } from "../context/theme-context/themeContext";
 SplashScreen.preventAutoHideAsync();
 
 function RootLayoutContent() {
@@ -13,6 +14,8 @@ function RootLayoutContent() {
   const [fontsLoaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
+
+  const { isDark, theme } = useTheme(); // Get the theme and isDark from the context
 
   const [appIsReady, setAppIsReady] = useState(false);
 
@@ -42,18 +45,19 @@ function RootLayoutContent() {
   }
 
   return (
-    <ThemeProvider value={DefaultTheme}>
+    <>
       <Slot />
-      <StatusBar style="auto" />
-    </ThemeProvider>
+      <StatusBar style={isDark ? "light" : "dark"} />
+    </>
   );
 }
 
-import { AuthProvider } from "../context/auth-context/authContext";
 export default function RootLayout() {
   return (
     <AuthProvider>
-      <RootLayoutContent />
+      <ThemeProvider>
+        <RootLayoutContent />
+      </ThemeProvider>
     </AuthProvider>
   );
 }

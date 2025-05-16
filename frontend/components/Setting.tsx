@@ -2,10 +2,56 @@ import { View, StyleSheet, Text, Switch, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 import { removeAuthData } from "@/services/auth-services/authService";
-
+import { useTheme } from "@/context/theme-context/themeContext";
 import { router } from "expo-router";
 
 export default function Setting() {
+  const { theme, isDark, toogleTheme } = useTheme(); // Get the theme from the context
+  // Create styles based on current theme
+
+  const styles = StyleSheet.create({
+    settingContainer: {
+      marginTop: 50,
+      alignItems: "center",
+      width: "90%",
+      borderRadius: 20,
+      // backgroundColor: "#C1D8C3",
+      backgroundColor: theme.colors.background,
+      padding: 20,
+    },
+    text: {
+      fontSize: 18,
+      fontWeight: "bold",
+      // color: "#4B5945",
+      color: theme.colors.text,
+      textAlign: "left",
+    },
+    sectionListComponent: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      // backgroundColor: "#EFEEEA",
+      backgroundColor: theme.colors.inputBackground,
+      width: "100%",
+      borderRadius: 20,
+      paddingVertical: 0,
+      paddingHorizontal: 15,
+      elevation: 10,
+      alignItems: "center",
+      marginBottom: 10,
+      marginTop: 10,
+      height: 50,
+    },
+    innerSectionListComponent: {
+      flexDirection: "row",
+      gap: 12,
+      alignItems: "center",
+    },
+    innerContainer: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+  });
   return (
     <View style={styles.settingContainer}>
       {/* Dark mode  */}
@@ -14,13 +60,12 @@ export default function Setting() {
           <Ionicons name="moon" size={30} color="#4B5945" />
           <Text style={styles.text}>Dark Mode</Text>
         </View>
-
         <Switch
+          value={isDark}
+          onValueChange={toogleTheme}
           trackColor={{ false: "#767577", true: "#81b0ff" }}
           thumbColor={false ? "#f5dd4b" : "#f4f3f4"}
           ios_backgroundColor="#3e3e3e"
-          onValueChange={() => {}}
-          value={false}
         />
       </View>
       {/* Notification */}
@@ -72,44 +117,3 @@ export default function Setting() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  settingContainer: {
-    marginTop: 50,
-    alignItems: "center",
-    width: "90%",
-    borderRadius: 20,
-    backgroundColor: "#C1D8C3",
-    padding: 20,
-  },
-  text: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#4B5945",
-    textAlign: "left",
-  },
-  sectionListComponent: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    backgroundColor: "#EFEEEA",
-    width: "100%",
-    borderRadius: 20,
-    paddingVertical: 0,
-    paddingHorizontal: 15,
-    elevation: 10,
-    alignItems: "center",
-    marginBottom: 10,
-    marginTop: 10,
-    height: 50,
-  },
-  innerSectionListComponent: {
-    flexDirection: "row",
-    gap: 12,
-    alignItems: "center",
-  },
-  innerContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-});

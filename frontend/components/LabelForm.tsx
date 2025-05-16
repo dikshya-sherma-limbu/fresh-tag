@@ -13,12 +13,81 @@ import DropDownPicker from "react-native-dropdown-picker";
 import CustomButton from "./Button";
 import { Ionicons } from "@expo/vector-icons";
 import { createLabel } from "@/services/label-services/labelService";
+import { useTheme } from "@/context/theme-context/themeContext";
 
 export default function LabelForm() {
   const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState<"date" | "time">("date");
   const [show, setShow] = useState(false);
   const [foodName, setFoodName] = useState<string>("");
+
+  const { theme } = useTheme(); // Get the theme from the context
+
+  // Create styles based on  current theme
+  const styles = StyleSheet.create({
+    formContainer: {
+      width: "90%",
+      backgroundColor: theme.colors.background,
+      marginTop: 50,
+      marginBottom: 0,
+      borderRadius: 10,
+      padding: 15,
+    },
+    text: {
+      color: theme.colors.text,
+      fontFamily: "sans-serif",
+      fontSize: 15,
+      textAlign: "left",
+    },
+    inputText: {
+      width: "100%",
+      minWidth: 300,
+      height: 45,
+      borderWidth: 1,
+      marginTop: 20,
+      marginBottom: 20,
+      borderColor: theme.colors.border,
+
+      borderRadius: 5,
+      padding: 10,
+      alignSelf: "center",
+      backgroundColor: theme.colors.inputBackground,
+      color: theme.colors.text,
+    },
+    //for placeholder
+    placeholder: {
+      color: theme.colors.text,
+    },
+    innerContainer: {
+      flexDirection: "row",
+      justifyContent: "space-around",
+      gap: 10,
+      marginBottom: 20,
+    },
+    date: {
+      width: "100%",
+      height: 45,
+      borderWidth: 1,
+      borderColor: theme.colors.border,
+      borderRadius: 5,
+      paddingHorizontal: 10,
+      color: theme.colors.text,
+      backgroundColor: theme.colors.inputBackground,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+    },
+    dateButtonText: {
+      color: theme.colors.text,
+      fontSize: 14,
+    },
+    buttonContainer: {
+      flexDirection: "row-reverse",
+      gap: 10,
+      marginBottom: 20,
+    },
+  });
+
   // For the DateTimePicker
   interface DateChangeEvent {
     type: string;
@@ -219,61 +288,3 @@ export default function LabelForm() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  formContainer: {
-    width: "90%",
-    backgroundColor: "#88AF8F",
-    marginTop: 50,
-    marginBottom: 0,
-    borderRadius: 10,
-    padding: 15,
-  },
-  text: {
-    color: "#116211",
-    fontFamily: "sans-serif",
-    fontSize: 15,
-    textAlign: "left",
-  },
-  inputText: {
-    width: "100%",
-    minWidth: 300,
-    height: 45,
-    borderWidth: 1,
-    marginTop: 20,
-    marginBottom: 20,
-    borderColor: "#ccc",
-    borderRadius: 5,
-    padding: 10,
-    alignSelf: "center",
-    backgroundColor: "#FFFFFF",
-  },
-  innerContainer: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    gap: 10,
-    marginBottom: 20,
-  },
-  date: {
-    width: "100%",
-    height: 45,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    color: "#116211",
-    backgroundColor: "#FFFFFF",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  dateButtonText: {
-    color: "#666",
-    fontSize: 14,
-  },
-  buttonContainer: {
-    flexDirection: "row-reverse",
-    gap: 10,
-    marginBottom: 20,
-  },
-});
