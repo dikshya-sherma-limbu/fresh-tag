@@ -32,11 +32,16 @@ const LoginScreen = () => {
       console.log("Login attempt starting for:", email);
       setLocalLoading(true);
       await login({ email, password });
-
+      console.log("Login attempt finished for:", email);
       console.log("isAuthenticated after login:", isUserValidated);
       // No need to navigate - the root layout will handle this based on isAuthenticated
     } catch (error: any) {
       console.error("Login error in component:", error);
+      console.log("Error object:", JSON.stringify(error));
+      console.log("Error name:", error.name);
+      console.log("Error message:", error.message);
+      console.log("Response status:", error.response?.status);
+      console.log("Response data:", error.response?.data);
       // Handle login error
       const errorMessage =
         error.response?.data?.message ||

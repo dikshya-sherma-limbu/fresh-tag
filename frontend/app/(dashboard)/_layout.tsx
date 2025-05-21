@@ -2,12 +2,23 @@
 import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { View, StyleSheet } from "react-native";
+import { useTheme } from "@/context/theme-context/themeContext";
 export default function DashboardLayout() {
+  const { theme } = useTheme();
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: theme.colors.background,
+    },
+  });
+
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: "#88AF8F", // Change to your desired active color
-        tabBarInactiveTintColor: "#555", // Change to your desired inactive color
+        tabBarActiveTintColor:theme.colors.toggleActiveBackground, // Change to your desired active color
+        tabBarInactiveTintColor:theme.colors.toggleInActiveBackground, // Change to your desired inactive color
         headerShown: false,
         tabBarStyle: {
           position: "absolute", // Position the tab bar at the bottom
@@ -15,7 +26,7 @@ export default function DashboardLayout() {
           height: 50,
           left: "5%", // This positions the tab bar 5% from the left edge
           right: "5%",
-          backgroundColor: "white", // Change to your desired background color
+          backgroundColor: theme.colors.background, // Change to your desired background color
           elevation: 2, // Remove shadow on Android
           borderRadius: 10, // Add border radius for rounded corners
           margin: 15, // Add margin for spacing
@@ -53,12 +64,3 @@ export default function DashboardLayout() {
     </Tabs>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#fff",
-  },
-});

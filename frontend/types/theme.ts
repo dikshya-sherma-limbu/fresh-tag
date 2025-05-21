@@ -17,6 +17,8 @@ export interface ThemeColors {
   inputBackground: string;
   greenBlock: string; // For your green header/form backgrounds
   profileBackground: string; // For profile background
+  toggleActiveBackground: string; // For toggle active background
+  toggleInActiveBackground: string; // For toggle background
 }
 
 // Theme interface
@@ -29,7 +31,7 @@ export interface Theme {
 export const LightTheme: Theme = {
   dark: false,
   colors: {
-    primary: "#116211",
+    primary: "whitesmoke",
     background: "#FFFFFF",
     card: "#F5F5F5",
     text: "#000000",
@@ -44,6 +46,8 @@ export const LightTheme: Theme = {
     inputBackground: "#FFFFFF",
     greenBlock: "#8FBC8F",
     profileBackground: "#E4E4E4", // For profile background
+    toggleActiveBackground: "#88AF8F", // For toggle active background
+    toggleInActiveBackground: "#555", // For toggle background
   },
 };
 
@@ -66,5 +70,7 @@ export const DarkTheme: Theme = {
     inputBackground: "#2C2C2C",
     greenBlock: "#1E5C1E",
     profileBackground: "#2C2C2C", // For profile background
+    toggleActiveBackground: "#4CAF50", // For toggle active background
+    toggleInActiveBackground: "#fff", // For toggle background
   },
 };

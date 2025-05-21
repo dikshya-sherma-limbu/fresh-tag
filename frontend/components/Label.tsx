@@ -7,6 +7,7 @@ export default function Label({ labels }: { labels: expiryLabelType[] }) {
 
   // Create styles with the current theme
   const styles = StyleSheet.create({
+    container: {},
     innerContainer: {
       flexDirection: "column",
       justifyContent: "space-around",
@@ -83,12 +84,14 @@ export default function Label({ labels }: { labels: expiryLabelType[] }) {
   );
 
   return (
-    <FlatList
-      data={labels}
-      renderItem={renderItem}
-      keyExtractor={(item) => item._id}
-      contentContainerStyle={styles.listContainer}
-      ItemSeparatorComponent={() => <View style={styles.separator} />}
-    />
+    <View style={styles.container}>
+      <FlatList
+        data={labels}
+        renderItem={renderItem}
+        keyExtractor={(item) => item._id}
+        contentContainerStyle={styles.listContainer}
+        ItemSeparatorComponent={() => <View style={styles.separator} />}
+      />
+    </View>
   );
 }

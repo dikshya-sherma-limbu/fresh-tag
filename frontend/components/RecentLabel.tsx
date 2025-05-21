@@ -19,6 +19,7 @@ export default function RecentLabel() {
       width: "90%",
       borderRadius: 10,
       flex: 1, // Allow this container to expand
+      marginBottom: 80,
     },
     labelListContainer: {
       flex: 1, // This ensures the FlatList has room to scroll

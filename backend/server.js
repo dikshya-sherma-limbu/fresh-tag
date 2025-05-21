@@ -15,7 +15,11 @@ app.use(bodyParser.json()); // Parse incoming JSON data
 // Enable CORS for all routes
 app.use(
   cors({
-    origin: "exp://192.168.2.180:8081" || "*" || "http://localhost:8081", // Allow requests from any origin
+    origin:
+      "exp://192.168.2.180:8081" ||
+      "*" ||
+      "http://localhost:8081" ||
+      "exp://10.24.51.20:8081", // Allow requests from any origin
     methods: ["GET", "POST", "PUT", "DELETE"], // Allowed HTTP methods
     allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
   })

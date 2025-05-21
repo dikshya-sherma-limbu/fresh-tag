@@ -10,7 +10,60 @@ import {
   getExpiredLabels,
   getCurrentDateLabels,
 } from "@/services/label-services/labelService";
+
+import { useTheme } from "@/context/theme-context/themeContext";
 export default function History() {
+  const { theme } = useTheme(); // Get the theme from the context
+  const styles = StyleSheet.create({
+    historyContainer: {
+      alignItems: "center",
+      flex: 1,
+      backgroundColor: theme.colors.primary,
+    },
+    headerContainer: {
+      flexDirection: "row",
+      justifyContent: "space-around",
+      width: "100%",
+      marginTop: 45,
+    },
+    headerText: {
+      color: "#116211",
+      fontFamily: "sans-serif",
+      fontSize: 18,
+      textAlign: "left",
+      borderRadius: 10,
+      padding: 8,
+      backgroundColor: "#F5F5F5",
+    },
+    labelContainer: {
+      backgroundColor: "#FFFFFF",
+      marginTop: 50,
+      padding: 15,
+      width: "90%",
+      borderRadius: 10,
+      minHeight: 200,
+      justifyContent: "center",
+      marginBottom: 250,
+    },
+    label: {
+      borderWidth: 2,
+      borderRadius: 10,
+      padding: 10,
+      borderColor: "#ccc",
+      backgroundColor: "#86AB89",
+    },
+    statusText: {
+      textAlign: "center",
+      color: "#666",
+      fontSize: 16,
+    },
+    errorText: {
+      textAlign: "center",
+      color: "#d32f2f",
+      fontSize: 16,
+    },
+  });
+
   const [labels, setLabels] = useState<expiryLabelType[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -141,51 +194,3 @@ export default function History() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  historyContainer: {
-    alignItems: "center",
-    flex: 1,
-  },
-  headerContainer: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    width: "100%",
-    marginTop: 45,
-  },
-  headerText: {
-    color: "#116211",
-    fontFamily: "sans-serif",
-    fontSize: 18,
-    textAlign: "left",
-    borderRadius: 10,
-    padding: 8,
-    backgroundColor: "#F5F5F5",
-  },
-  labelContainer: {
-    backgroundColor: "#FFFFFF",
-    marginTop: 50,
-    padding: 15,
-    width: "90%",
-    borderRadius: 10,
-    minHeight: 200,
-    justifyContent: "center",
-  },
-  label: {
-    borderWidth: 2,
-    borderRadius: 10,
-    padding: 10,
-    borderColor: "#ccc",
-    backgroundColor: "#86AB89",
-  },
-  statusText: {
-    textAlign: "center",
-    color: "#666",
-    fontSize: 16,
-  },
-  errorText: {
-    textAlign: "center",
-    color: "#d32f2f",
-    fontSize: 16,
-  },
-});

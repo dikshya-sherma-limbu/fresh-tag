@@ -1,7 +1,7 @@
 // Base configuration for API services
 
 // Base URL for your API (customize this for your environment)
-const BASE_URL = "http://192.168.2.180:2025";
+const BASE_URL = "http://192.168.2.180:2025"; // causes CORS issues
 
 // API endpoints
 export const API_ENDPOINTS = {
