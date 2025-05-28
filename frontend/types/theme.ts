@@ -55,7 +55,7 @@ export const LightTheme: Theme = {
 export const DarkTheme: Theme = {
   dark: true,
   colors: {
-    primary: "#4CAF50",
+    primary: "#7da96b",
     background: "#121212",
     card: "#1E1E1E",
     text: "#FFFFFF",
@@ -63,8 +63,8 @@ export const DarkTheme: Theme = {
     border: "#2C2C2C",
     shadow: "#000000",
 
-    buttonBackground: "#1E1E1E",
-    buttonText: "#4CAF50",
+    buttonBackground: "#d9d9d9",
+    buttonText: "black",
     buttonDisabledBackground: "#2C2C2C",
     buttonDisabledText: "#707070",
     inputBackground: "#2C2C2C",

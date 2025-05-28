@@ -2,11 +2,15 @@
 const jwt = require("jsonwebtoken");
 
 // Function to generate a JWT token
-const generateToken = (userId) => {
+const generateToken = (userId, tokenVersion) => {
   try {
-    const token = jwt.sign({ id: userId }, process.env.JWT_SECRET, {
-      expiresIn: "3h",
-    });
+    const token = jwt.sign(
+      { id: userId, tokenVersion }, // Include user ID and token version in the payload
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "1h",
+      }
+    );
     // Log the generated token for debugging purposes
     console.log("✅ Token generated successfully:", token);
 

@@ -26,6 +26,18 @@ class UserRepository {
     }
     return await User.findById(String(id)).select("username email");
   }
+  // Find a username in the entire database with the same username
+  async findByUsername(username) {
+    return await User.findOne({ username });
+  }
+  // find an email in the entire database with the same email
+  async findByEmail(email) {
+    return await User.findOne({ email });
+  }
+  // Update a user by ID
+  async updateUser(id, userData) {
+    return await User.findByIdAndUpdate(id, userData, { new: true }); // Return the updated user | new:true - means return the updated document
+  }
 }
 
 module.exports = new UserRepository();

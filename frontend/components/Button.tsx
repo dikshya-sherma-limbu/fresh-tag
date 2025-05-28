@@ -22,7 +22,7 @@ export default function CustomButton(CustomButtonProps: CustomButtonProps) {
   const { title, onPress, disabled, additionalStyle, textStyle } =
     CustomButtonProps;
   const { theme } = useTheme(); // Get the theme from the context
-  
+
   // Create styles with the current theme
   const styles = StyleSheet.create({
     text: {

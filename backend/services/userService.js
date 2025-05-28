@@ -17,7 +17,7 @@ const UserService = {
     await user.save();
 
     // Generate JWT token after the user is saved
-    const token = generateToken(user._id); // Token generated here
+    const token = generateToken(user._id, user.tokenVersion); // Generate token with user ID and token version
 
     return { user, token };
   },
@@ -37,7 +37,8 @@ const UserService = {
     }
 
     console.log("id sent to generate token", user._id);
-    const token = generateToken(user._id); // Token generated here
+    console.log("token version sent to generate token", user.tokenVersion);
+    const token = generateToken(user._id, user.tokenVersion); // Generate token with user ID and token version
 
     return { token, user };
   },
@@ -58,6 +59,36 @@ const UserService = {
   //   // This can vary depending on how you manage sessions or tokens
 
   // },
+  // Update user details
+
+  updateUser: async (id, userData) => {
+    const user = await userRepository.findById(id);
+    //If the data is email or username, check if the new value is already in use
+    if ("email" in userData || "username" in userData) {
+      // check if the new email or username is already in use the database
+      const exisitingUsername = await userRepository.findByUsername(
+        userData.username
+      );
+      const exisitingEmail = await userRepository.findByEmail(userData.email);
+      if (exisitingUsername) {
+        throw new Error("Username already in use");
+      }
+      if (exisitingEmail) {
+        throw new Error("Email already in use");
+      }
+    }
+    user.tokenVersion = (user.tokenVersion || 0) + 1; // Increment the token version to expire the old token
+    // Hash the password if it is being updated
+    console.log("token version before update", user.tokenVersion);
+    const updatedUser = await userRepository.updateUser(id, userData);
+    if (!updatedUser) {
+      throw new Error("Failed to update user");
+    }
+
+    // expire the old token
+    const token = generateToken(id, user.tokenVersion); // Generate a new token after updating user details
+    return { token, updatedUser };
+  },
 };
 
 module.exports = UserService;

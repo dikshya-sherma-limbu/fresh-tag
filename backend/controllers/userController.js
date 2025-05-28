@@ -46,6 +46,24 @@ const validateUserToken = async (req, res) => {
   return res.status(200).json({ message: "Token is valid", user: req.user }); // Send the user details if token is valid
 };
 
+// update user details
+const updateUser = async (req, res) => {
+  const userId = req.user.id; // Get the user ID from the request object
+  const userData = req.body; // Get the updated user data from the request body
+  console.log("Controller userId:", userId, typeof userId);
+  console.log("Controller userData:", userData, typeof userData);
+  try {
+    const { token, updatedUser } = await userService.updateUser(
+      userId,
+      userData
+    );
+    res.status(200).json({ token, updatedUser }); // Send the updated user details as a response
+  } catch (err) {
+    console.error("Controller error:", err);
+    res.status(400).json({ message: err.message });
+  }
+};
+
 //get user details by id
 const getUserById = async (req, res) => {
   const userId = req.user.id;
@@ -72,4 +90,5 @@ module.exports = {
   loginUser,
   validateUserToken,
   getUserById,
+  updateUser,
 };
