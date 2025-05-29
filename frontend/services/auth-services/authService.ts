@@ -12,7 +12,7 @@ export interface LoginCredentials {
 }
 
 export interface RegisterCredentials {
-  name: string;
+  username: string;
   email: string;
   password: string;
 }
@@ -82,6 +82,36 @@ export const login = async (credentials: LoginCredentials) => {
     throw error;
   }
 };
+// Register function
+export const register = async (credentials: RegisterCredentials) => {
+  try {
+    const response = await axios.post(API_ENDPOINTS.USERS.REGISTER, credentials, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (response.status !== 201) {
+      console.error("Response error:", response);
+    }
+    const data = response.data;
+
+    if (data.token) {
+      await storeToken(data.token); // Store the token securely
+    } else {
+      console.error("No token received in response:", data);
+    }
+    return data;
+  } catch (error) {
+    console.error("Register error:", error);
+    if (axios.isAxiosError(error)) {
+      console.error("Axios error:", error.response?.data || error.message);
+    } else {
+      console.error("Unexpected error:", error);
+    }
+    throw error;
+  }
+}
 // Check if user is authenticated
 export const isAuthenticated = async (): Promise<boolean> => {
   const token = await getToken();

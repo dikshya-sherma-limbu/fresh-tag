@@ -6,18 +6,21 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-
+import { useAuth } from "@/context/auth-context/authContext";
 import { Link } from "expo-router";
 import { useState } from "react";
 
 const RegisterScreen = () => {
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const { register, isUserValidated } = useAuth();
+  const [localLoading, setLocalLoading] = useState(false);
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
     // Validate form inputs
-    if (!email || !password || !confirmPassword) {
+    if (!email || !password || !confirmPassword || !username) {
       Alert.alert("Error", "Please fill in all fields");
       return;
     }
@@ -29,13 +32,20 @@ const RegisterScreen = () => {
 
     // Create user data object
     const userData = {
+      username,
       email,
       password,
     };
-
-    // Here you would typically send the data to your backend API
-    console.log("User registration data:", userData);
-
+    // Call the register function from auth context
+    try {
+      setLocalLoading(true);
+      await register(userData);
+      console.log("Registration successful for:", username);
+    } catch (error: any) {
+      console.error("Registration error in component:", error);
+    } finally {
+      setLocalLoading(false);
+    }
     // For demonstration, show success alert
     Alert.alert("Success", "Registration successful!");
 
@@ -46,6 +56,13 @@ const RegisterScreen = () => {
     <View style={styles.container}>
       <Text style={styles.title}>Create Fresh Tag Account</Text>
 
+      <TextInput
+        placeholder="Username"
+        style={styles.input}
+        value={username}
+        onChangeText={setUsername}
+        autoCapitalize="none"
+      />
       <TextInput
         placeholder="Email"
         style={styles.input}
