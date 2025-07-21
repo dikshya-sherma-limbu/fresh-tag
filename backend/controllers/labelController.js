@@ -5,6 +5,7 @@ const LabelController = {
   // Create a new label
   createLabel: async (req, res) => {
     try {
+      console.log("Creating label with data:");
       const {
         foodName,
         storageMethod,
@@ -26,7 +27,7 @@ const LabelController = {
           message: "Missing required fields",
         });
       }
-
+      console.log("calling service with data:");
       // Call service to create label
       const label = await LabelService.createLabel({
         userId,
@@ -35,12 +36,13 @@ const LabelController = {
         preparationDate,
         preservative,
         packageType,
-      });
-
-      return res.status(201).json({
-        success: true,
-        message: "Label created successfully",
-        data: label,
+      }).then((label) => {
+        console.log("Label created successfully:");
+        return res.status(201).json({
+          success: true,
+          message: "Label created successfully",
+          data: label,
+        });
       });
     } catch (error) {
       console.error("Error in createLabel controller:", error);

@@ -180,13 +180,14 @@ export default function LabelForm() {
       console.log("Label data:", labelData);
       // Call the createLabel function from the labelService
       const response = await createLabel(labelData);
+      
       if (response.status !== 201) {
         console.error("Response error:", response);
         Alert.alert("Error", "Failed to create label");
         return;
       }
-      // then handle the response as needed
 
+      // then handle the response as needed
       console.log("Label created successfully:", response);
     } catch (error) {
       console.error("Error creating label:", error);

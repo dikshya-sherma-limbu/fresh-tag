@@ -19,6 +19,7 @@ const RegisterScreen = () => {
   const [localLoading, setLocalLoading] = useState(false);
 
   const handleRegister = async () => {
+    console.log("Register attempt starting for:", username);
     // Validate form inputs
     if (!email || !password || !confirmPassword || !username) {
       Alert.alert("Error", "Please fill in all fields");
@@ -45,11 +46,8 @@ const RegisterScreen = () => {
       console.error("Registration error in component:", error);
     } finally {
       setLocalLoading(false);
+      Alert.alert("Success", "Registration successful!");
     }
-    // For demonstration, show success alert
-    Alert.alert("Success", "Registration successful!");
-
-    // You can add navigation logic here to redirect to login page
   };
 
   return (
@@ -99,6 +97,7 @@ const RegisterScreen = () => {
         activeOpacity={0.8}
         style={styles.button}
         onPress={handleRegister}
+        disabled={localLoading}
       >
         <Text style={styles.buttonText}>Register</Text>
       </TouchableOpacity>

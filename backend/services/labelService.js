@@ -8,8 +8,8 @@ dotenv.config();
 
 // API key for Gemini
 const apiKey = process.env.GEMINI_API_KEY;
-const modelId = process.env.GEMINI_MODEL_ID;
-const apiUrl = `https://generativelanguage.googleapis.com/v1beta/${modelId}:generateContent?key=${apiKey}`;
+const modelId = "gemini-2.5-flash"; // ✅ This is the correct model ID for text
+const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelId}:generateContent?key=${apiKey}`;
 
 const LabelService = {
   // Create a new label
@@ -28,6 +28,7 @@ const LabelService = {
     }
 
     try {
+      console.log("Generating label for user:", userId);
       // Call the Gemini API to generate the label
       const response = await axios.post(
         apiUrl,
@@ -104,7 +105,9 @@ const LabelService = {
       };
     } catch (err) {
       console.error("Error generating label:", err);
-      throw new Error("Failed to generate food expiry label: " + err.message);
+      throw new Error(
+        "Failed to generate food expiry label: " + err.message.trim()
+      );
     }
   },
 
